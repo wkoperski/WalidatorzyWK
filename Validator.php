@@ -5,10 +5,7 @@ namespace Validator;
 use PDO;
 
 class ValidatorStatisticsFormalVerification
-{
-
-
-    static function getStatisticsFormalVerification(PDO $PDO):array
+{    static function getStatisticsFormalVerification(PDO $PDO):array
     {
         $stmt = $PDO->prepare("Select distinct(walidator),status, count(status) as 'LICZBA' from weryfikacja_formalna group by walidator, status ORDER BY walidator");
         $stmt->execute();
@@ -99,5 +96,39 @@ class Validator
     public function getEmail(): string
     {
         return $this->email;
+    }
+}
+
+class getVerificationFormal
+{
+    static function getVerificationFormalVerification(PDO $PDO, Validator $validator):array
+    {
+        $stmt = $PDO->prepare("Select * from weryfikacja_formalna WHERE nazwa=:name");
+        $stmt->execute(array(
+            'name' => $validator->getName(),
+        ));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
+
+class getValidator
+{
+    static function getValidatorByName(PDO $PDO, string $name):array
+    {
+
+    }
+    static function getValidatorByID(PDO $PDO, int $id):array
+    {
+
+    }
+
+    static function getValidatorByEmail(PDO $PDO, string $email):array
+    {
+
+    }
+
+    static function getValidatorByStatus(PDO $PDO, int $status):array
+    {
+        
     }
 }
