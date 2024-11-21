@@ -19,7 +19,6 @@ spl_autoload_register( 'my_custom_autoloader' );
 
 
 
-$val = new Validator\Validator("Wojciech","Koperski","kopsow@gmail.com",true);
 $smart = new \Smarty\Smarty();
 
 
@@ -79,7 +78,8 @@ if (isset($_SESSION['access_token']))
     $stmt = $db->prepare("SELECT * FROM Walidatorzy ORDER BY Nazwa" );
     $stmt->execute();
     $smart->assign('walidatorzy', $stmt->fetchAll(PDO::FETCH_ASSOC));
-$smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
+    $smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
+    $smart->assign('StatisticsTransaction',\Validator\ValidatorStatisticsFormalVerification::getStatisticsTransactionVerification($db));
 
     $smart->display('index.tpl');
 
