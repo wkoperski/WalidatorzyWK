@@ -66,7 +66,7 @@
 
                                 <form class="row g-3 needs-validation" novalidate>
                                     <div class="col-12">
-                                        <a class="btn btn-primary w-100" href='https://login.microsoftonline.com/62d8e948-4039-40ed-8aaa-260464b28114/oauth2/v2.0/authorize?client_id=287bf80e-a546-4f3d-a9d5-65a01b6e5588&response_type=code&redirect_uri=http://localhost:63352/Admin/index.php&response_mode=query&scope=offline_access%20user.read'>Zaloguj</a>
+                                        <a class="btn btn-primary w-100" href='https://login.microsoftonline.com/62d8e948-4039-40ed-8aaa-260464b28114/oauth2/v2.0/authorize?client_id=287bf80e-a546-4f3d-a9d5-65a01b6e5588&response_type=code&redirect_uri=http://localhost:{$port}/WalidatorzyWK/index.php&response_mode=query&scope=offline_access%20user.read'>Zaloguj</a>
                                     </div>
 
                                 </form>
