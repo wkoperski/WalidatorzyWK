@@ -18,7 +18,6 @@ function my_custom_autoloader( $class_name ):void
 spl_autoload_register( 'my_custom_autoloader' );
 
 
-
 $smart = new \Smarty\Smarty();
 
 
@@ -107,7 +106,35 @@ if (isset($_GET['action']) && $_GET['action'] == 'login'){
 
 
 
+if(isset($_GET['code']))
+{
 
+    $postParameter = array(
+        'client_id' => $clientId,
+        'grant_type' => 'authorization_code',
+        'code'  =>  $_GET['code'],
+        'redirect_uri'=>'http://localhost:63352/Admin/index.php',
+        'client_secret'=>$clientSecret
+    );
+
+    $curlHandle = curl_init('https://login.microsoftonline.com/62d8e948-4039-40ed-8aaa-260464b28114/oauth2/v2.0/token');
+    curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $postParameter);
+    curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+
+    $curlResponse = curl_exec($curlHandle);
+    /*echo json_decode($curlResponse);*/
+
+    $json = json_decode($curlResponse);
+    if (isset($json->access_token))
+    {
+        setcookie('access_token', $json->access_token, time() + (3599 * 30), "/"); // 86400 = 1 day
+        $_SESSION['access_token'] = $json->access_token;
+        var_dump($_SESSION['access_token']);
+    }
+
+
+
+}
 
 if (isset($_POST['access_token'])) {
     $_SESSION['t'] = $_POST['access_token'];
