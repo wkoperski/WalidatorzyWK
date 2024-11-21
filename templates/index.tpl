@@ -67,6 +67,61 @@
                 <div class="row">
 
                     <!-- Sales Card -->
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title">W Akceptacji - Formalna</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-cart"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h6>145</h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title">W Akceptacji - Transakcyjna</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-cart"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h6>145</h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title">W akceptacji > 5 dni</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-shield-exclamation"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h6>145</h6>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- End Sales Card -->
                    <!-- End Sales Card -->
 
                     <!-- Revenue Card -->
@@ -125,12 +180,23 @@
                             </div>
                         </div>
                     </div>
-
+<script>
+    filter()
+    {
+        console.log('dziala');
+    }
+</script>
                     <!-- Lista walidacji -->
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Statystyki Walidatorów - Weryfikacja formalna</h5>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onclick="filter()">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Pokaź tylko w akceptacji
+                                    </label>
+                                </div>
                                 <!-- Bordered Table -->
                                 <table class="table table-bordered">
                                     <thead>
@@ -168,6 +234,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Statystyki Walidatorów - Weryfikacja Transakcyjna</h5>
+
                                 <!-- Bordered Table -->
                                 <table class="table table-bordered">
                                     <thead>
@@ -180,14 +247,16 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Brandon Jacob</td>
-                                        <td>Designer</td>
-                                        <td>28</td>
-                                        <td>2016-05-25</td>
-                                    </tr>
-
+                                    {assign var=counter value=1}
+                                    {foreach from=$StatisticsTransaction item=row}
+                                        <tr {if $row['w_akceptacji'] >0} class="table-warning" {/if}>
+                                            <th scope="row">{$counter++}</th>
+                                            <td>{$row['walidator']}</td>
+                                            <td>{$row['w_akceptacji']}</td>
+                                            <td>{$row['akceptacja']}</td>
+                                            <td>{$row['odrzucona']}</td>
+                                        </tr>
+                                    {/foreach}
                                     </tbody>
                                 </table>
                                 <!-- End Bordered Table -->
