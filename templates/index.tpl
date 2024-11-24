@@ -69,8 +69,9 @@
                     <!-- Sales Card -->
                     <div class="col-xxl-4 col-md-6">
                         <div class="card info-card sales-card">
+
                             <div class="card-body">
-                                <h5 class="card-title">W Akceptacji - Formalna</h5>
+                                <h5 class="card-title">BEZ FORMALNEJ - 30 dni</span></h5>
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -78,6 +79,8 @@
                                     </div>
                                     <div class="ps-3">
                                         <h6>145</h6>
+
+
                                     </div>
                                 </div>
                             </div>
@@ -87,8 +90,9 @@
 
                     <div class="col-xxl-4 col-md-6">
                         <div class="card info-card sales-card">
+
                             <div class="card-body">
-                                <h5 class="card-title">W Akceptacji - Transakcyjna</h5>
+                                <h5 class="card-title">BEZ TRANSAKCYJNEJ - 30 dni</span></h5>
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -96,32 +100,14 @@
                                     </div>
                                     <div class="ps-3">
                                         <h6>145</h6>
+
+
                                     </div>
                                 </div>
                             </div>
 
                         </div>
                     </div>
-
-                    <div class="col-xxl-4 col-md-6">
-                        <div class="card info-card sales-card">
-                            <div class="card-body">
-                                <h5 class="card-title">W akceptacji > 5 dni</h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-shield-exclamation"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <h6>145</h6>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <!-- End Sales Card -->
                    <!-- End Sales Card -->
 
                     <!-- Revenue Card -->
@@ -129,146 +115,155 @@
 
                     <!-- Customers Card -->
                    <!-- End Customers Card -->
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">List wszystkich walidatorów </h5>
-
-                                <!-- Default Table -->
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Nazwa</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Aktywny</th>
-                                        <th scope="col">Aktywuj / Dezaktywuj</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {assign var=counter value=1}
-                                    {foreach from=$walidatorzy item=walidator}
-
-                                        <tr>
-                                            <th scope="row">{$counter++}</th>
-                                            <td>{$walidator['nazwa']}</td>
-                                            <td>{$walidator['email']}</td>
-                                            <td>
-                                                {if $walidator['aktywny'] == 1}
-                                                    TAK
-                                                    {else}
-                                                    NIE
-                                                {/if}
-                                            </td>
-                                            <td>
-                                                {if $walidator['aktywny'] == 1}
-                                                    <button type="button" class="btn btn-danger">Dezaktywuj</button>
-                                                {/if}
-                                                {if $walidator['aktywny'] == 0}
-                                                    <button type="button" class="btn btn-success">Aktywuj</button>
-                                                {/if}
-
-                                            </td>
-                                        </tr>
-
-                                     {/foreach}
+                    {if isset($formalVerificationList)}
+                        {include file="test.tpl"}
 
 
-                                    </tbody>
-                                </table>
-                                <!-- End Default Table Example -->
-                            </div>
-                        </div>
-                    </div>
-<script>
-    filter()
-    {
-        console.log('dziala');
-    }
-</script>
-                    <!-- Lista walidacji -->
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Statystyki Walidatorów - Weryfikacja formalna</h5>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onclick="filter()">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        Pokaź tylko w akceptacji
-                                    </label>
+                        {else}
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Lista wszystkich walidatorów </h5>
+
+                                    <!-- Default Table -->
+                                    <form action="index.php" method="POST">
+
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Nazwa</th>
+                                                <th scope="col">Email</th>
+                                                <th scope="col">Aktywny</th>
+                                                <th scope="col">Aktywuj / Dezaktywuj</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {assign var=counter value=1}
+                                            {foreach from=$walidatorzy item=walidator}
+
+                                                <tr>
+                                                    <th scope="row">{$counter++}</th>
+                                                    <td>{$walidator['nazwa']}</td>
+                                                    <td>{$walidator['email']}</td>
+                                                    <td>
+                                                        {if $walidator['aktywny'] == 1}
+                                                            TAK
+                                                        {else}
+                                                            NIE
+                                                        {/if}
+                                                    </td>
+                                                    <td>
+                                                        {if $walidator['aktywny'] == 1}
+
+                                                            <button type="submit" class="btn btn-danger" name="validator_delete" value="{$walidator['nazwa']}">Dezaktywuj</button>
+
+
+                                                        {/if}
+                                                        {if $walidator['aktywny'] == 0}
+                                                            <button type="button" class="btn btn-success">Aktywuj</button>
+                                                        {/if}
+
+                                                    </td>
+                                                </tr>
+
+                                            {/foreach}
+
+
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                    <!-- End Default Table Example -->
                                 </div>
-                                <!-- Bordered Table -->
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Nazwa</th>
-                                        <th scope="col">W AKCEPTACJI</th>
-                                        <th scope="col">ZAAKCEPTOWANYCH</th>
-                                        <th scope="col">ODRZUCONYCH</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {assign var=counter value=1}
-                                    {foreach from=$StatisticsFormal item=row}
-                                        <tr {if $row['w_akceptacji'] >0} class="table-warning" {/if}>
-                                            <th scope="row">{$counter++}</th>
-                                            <td>{$row['walidator']}</td>
-                                            <td>{$row['w_akceptacji']}</td>
-                                            <td>{$row['akceptacja']}</td>
-                                            <td>{$row['odrzucona']}</td>
-                                        </tr>
-                                    {/foreach}
-
-
-                                    </tbody>
-                                </table>
-                                <!-- End Bordered Table -->
-
-
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Statystyki Walidatorów - Weryfikacja Transakcyjna</h5>
-
-                                <!-- Bordered Table -->
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Nazwa</th>
-                                        <th scope="col">W AKCEPTACJI</th>
-                                        <th scope="col">ZAAKCEPTOWANYCH</th>
-                                        <th scope="col">ODRZUCONYCH</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {assign var=counter value=1}
-                                    {foreach from=$StatisticsTransaction item=row}
-                                        <tr {if $row['w_akceptacji'] >0} class="table-warning" {/if}>
-                                            <th scope="row">{$counter++}</th>
-                                            <td>{$row['walidator']}</td>
-                                            <td>{$row['w_akceptacji']}</td>
-                                            <td>{$row['akceptacja']}</td>
-                                            <td>{$row['odrzucona']}</td>
+                        <!-- Lista walidacji -->
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Statystyki Walidatorów - Weryfikacja formalna</h5>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onclick="filter()">
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Pokaź tylko w akceptacji
+                                        </label>
+                                    </div>
+                                    <!-- Bordered Table -->
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Nazwa</th>
+                                            <th scope="col">W AKCEPTACJI</th>
+                                            <th scope="col">ZAAKCEPTOWANYCH</th>
+                                            <th scope="col">ODRZUCONYCH</th>
                                         </tr>
-                                    {/foreach}
-                                    </tbody>
-                                </table>
-                                <!-- End Bordered Table -->
+                                        </thead>
+                                        <tbody>
+                                        {assign var=counter value=1}
+                                        {foreach from=$StatisticsFormal item=row}
+                                            <tr {if $row['w_akceptacji'] >0} class="table-warning" {/if}>
+                                                <th scope="row">{$counter++}</th>
+                                                <td>{$row['walidator']}</td>
+                                                <td>{$row['w_akceptacji']}</td>
+                                                <td>{$row['akceptacja']}</td>
+                                                <td>{$row['odrzucona']}</td>
+                                            </tr>
+                                        {/foreach}
 
 
+                                        </tbody>
+                                    </table>
+                                    <!-- End Bordered Table -->
+
+
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- END Lista Walidacji -->
-                    <!-- Reports -->
 
-                    <!-- End Reports -->
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Statystyki Walidatorów - Weryfikacja Transakcyjna</h5>
+
+                                    <!-- Bordered Table -->
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Nazwa</th>
+                                            <th scope="col">W AKCEPTACJI</th>
+                                            <th scope="col">ZAAKCEPTOWANYCH</th>
+                                            <th scope="col">ODRZUCONYCH</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {assign var=counter value=1}
+                                        {foreach from=$StatisticsTransaction item=row}
+                                            <tr {if $row['w_akceptacji'] >0} class="table-warning" {/if}>
+                                                <th scope="row">{$counter++}</th>
+                                                <td>{$row['walidator']}</td>
+                                                <td>{$row['w_akceptacji']}</td>
+                                                <td>{$row['akceptacja']}</td>
+                                                <td>{$row['odrzucona']}</td>
+                                            </tr>
+                                        {/foreach}
+                                        </tbody>
+                                    </table>
+                                    <!-- End Bordered Table -->
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END Lista Walidacji -->
+                        <!-- Reports -->
+
+                        <!-- End Reports -->
+
+                    {/if}
+
 
 
                 </div>
@@ -286,7 +281,6 @@
                 <!-- Website Traffic -->
 
                 <!-- End Website Traffic -->
-
                 <!-- News & Updates Traffic  -->
 
 

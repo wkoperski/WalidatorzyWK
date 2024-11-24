@@ -2,6 +2,9 @@
 session_start();
 include "vendor/autoload.php";
 require_once(__DIR__.'/Validator.php');
+require_once(__DIR__.'/Verification/Formal.php');
+require_once(__DIR__.'/Verification/Transaction.php');
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -79,6 +82,43 @@ if (isset($_SESSION['access_token']))
     $smart->assign('walidatorzy', $stmt->fetchAll(PDO::FETCH_ASSOC));
     $smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
     $smart->assign('StatisticsTransaction',\Validator\ValidatorStatisticsFormalVerification::getStatisticsTransactionVerification($db));
+
+    if(isset($_POST['validator_delete']))
+    {
+        $validator_delete = \Validator\Validator::getValidatorByName($db, $_POST['validator_delete']);
+
+        try {
+            if (\Validator\checkValidator::IsActiveValidationsFormal($db, \Validator\Validator::getValidatorByName($db, $_POST['validator_delete'])) > 0) {
+                try {
+                    $result = FormalVerification\getFormalVerification::byName($db, \Validator\Validator::getValidatorByName($db, $_POST['validator_delete']), \FormalVerification\VerificationStatus::IN_ACCEPTANCE);
+                    $smart->assign('formalVerificationList', $result);
+                } catch (Exception $e) {
+
+                }
+
+
+
+            }
+            if (\Validator\checkValidator::IsActiveValidationsTransaction($db, \Validator\Validator::getValidatorByName($db, $_POST['validator_delete'])) > 0) {
+                try {
+                    $result = TransactionVerification\getTransactionVerification::byValidatorName($db, \Validator\Validator::getValidatorByName($db, $_POST['validator_delete']));
+                    $smart->assign('transactionVerificationList', $result);
+                } catch (Exception $e) {
+
+                }
+
+
+
+            }
+        } catch (Exception $e) {
+
+        }
+        $smart->assign('deleteValidatorName',$_POST['validator_delete']);
+        $smart->assign('listValidators', \Validator\getValidator::getValidatorAll($db));
+        $smart->display('test.tpl');
+        exit();
+    }
+    
 
     $smart->display('index.tpl');
 
