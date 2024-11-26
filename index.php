@@ -9,7 +9,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-CONST PORT_WEB_SERVICE = '60449';
+CONST PORT_WEB_SERVICE = '62787';
 function my_custom_autoloader( $class_name ):void
 {
     $file = __DIR__.$class_name.'.php';
