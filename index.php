@@ -9,7 +9,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-CONST PORT_WEB_SERVICE = '62787';
+
 function my_custom_autoloader( $class_name ):void
 {
     $file = __DIR__.$class_name.'.php';
@@ -37,7 +37,7 @@ if(isset($_GET['code']))
         'client_id' => $clientId,
         'grant_type' => 'authorization_code',
         'code'  =>  $_GET['code'],
-        'redirect_uri'=>'http://localhost:'.PORT_WEB_SERVICE.'/WalidatorzyWK/index.php',
+        'redirect_uri'=>'https://adminwk.wielton.com.pl/index.php',
         'client_secret'=>$clientSecret
     );
 
@@ -124,9 +124,8 @@ if (isset($_SESSION['access_token']))
 
 
 } else {
-    $smart->assign('port',PORT_WEB_SERVICE);
     $smart->display('login.tpl');
-    //echo "<a href='https://login.microsoftonline.com/62d8e948-4039-40ed-8aaa-260464b28114/oauth2/v2.0/authorize?client_id=287bf80e-a546-4f3d-a9d5-65a01b6e5588&response_type=code&redirect_uri=http://localhost:63352//WalidatorzyWK/index.php&response_mode=query&scope=offline_access%20user.read'>Zaloguj</a>";
+
 }
 
 
@@ -134,7 +133,7 @@ if (isset($_SESSION['access_token']))
 if (isset($_GET['action']) && $_GET['action'] == 'login'){
     $params = array (
         'client_id' =>$clientId,
-        'redirect_uri' =>'http://localhost:'.PORT_WEB_SERVICE.'/WalidatorzyWK/index.php',
+        'redirect_uri' =>'https://adminwk.wielton.com.pl/index.php',
         'response_type' =>'id_token',
         'response_mode' =>'form_post',
         'scope' =>'https://graph.microsoft.com/User.Read',
@@ -153,7 +152,7 @@ if(isset($_GET['code']))
         'client_id' => $clientId,
         'grant_type' => 'authorization_code',
         'code'  =>  $_GET['code'],
-        'redirect_uri'=>'http://localhost:63352/Admin/index.php',
+        'redirect_uri'=>'https://adminwk.wielton.com.pl/index.php',
         'client_secret'=>$clientSecret
     );
 
