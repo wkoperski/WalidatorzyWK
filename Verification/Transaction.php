@@ -24,16 +24,20 @@ class getTransactionVerification implements iMethodGetVerification
         $param = '';
         if($status == null)
         {
-            $query = "SELECT weryfikacja_formalna.guid, weryfikacja_formalna.nazwa, weryfikacja_formalna.nip,weryfikacja_transakcyjna.zglaszajacy, weryfikacja_transakcyjna.wynik_weryfikacji 
+            $query = "SELECT weryfikacja_formalna.guid,weryfikacja_transakcyjna.guid weryfikacja_formalna.nazwa, weryfikacja_formalna.nip,weryfikacja_transakcyjna.zglaszajacy, weryfikacja_transakcyjna.wynik_weryfikacji 
 FROM weryfikacja_transakcyjna INNER JOIN weryfikacja_formalna ON weryfikacja_transakcyjna.formalna = weryfikacja_formalna.id 
 WHERE weryfikacja_transakcyjna.walidator=:walidator";
             $param = array(":walidator" => $validator->getName());
         }
-        if($status == VerificationStatus::IN_ACCEPTANCE)
+
+        if($status = 'W AKCEPTACJI')
         {
             $query = "SELECT weryfikacja_formalna.guid, weryfikacja_formalna.nazwa, weryfikacja_formalna.nip,weryfikacja_transakcyjna.zglaszajacy, weryfikacja_transakcyjna.wynik_weryfikacji 
 FROM weryfikacja_transakcyjna INNER JOIN weryfikacja_formalna ON weryfikacja_transakcyjna.formalna = weryfikacja_formalna.id 
 WHERE weryfikacja_transakcyjna.walidator=:walidator AND weryfikacja_transakcyjna.status='W AKCEPTACJI'";
+            $param = array(
+                "walidator" => $validator->getName()
+            );
         }
 
         $stmt = $PDO->prepare($query);

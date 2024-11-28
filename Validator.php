@@ -203,6 +203,28 @@ class getVerificationFormal
     }
 }
 
+class statusValidators
+{
+
+
+    static function disbaledValidator(PDO $PDO, Validator $validator):void
+    {
+
+        $stmt = $PDO->prepare("UPDATE walidatorzy SET aktywny = 0  WHERE id=:id");
+        $stmt->execute(array(
+            'id'    => $validator->getId()
+        ));
+    }
+
+    static function enabledValidator(PDO $PDO, Validator $validator):void
+    {
+
+        $stmt = $PDO->prepare("UPDATE walidatorzy SET aktywny = 1  WHERE id=:id");
+        $stmt->execute(array(
+            'id'    => $validator->getId()
+        ));
+    }
+}
 class getValidator
 {
     static function getValidatorAll(PDO $PDO,bool $status = true):array
@@ -213,9 +235,22 @@ class getValidator
         ));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    static function getValidatorAllforHtmlOptions(PDO $PDO,bool $status = true):array
+    {
+        $stmt = $PDO->prepare("Select id,nazwa from walidatorzy WHERE aktywny=:status ORDER BY nazwa");
+        $stmt->execute(array(
+            'status' => $status,
+        ));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     static function getValidatorByName(PDO $PDO, string $name):array
     {
 
+        $stmt = $PDO->prepare("Select id,nazwa,email,aktywny FROM walidatorzy WHERE nazwa =:name ");
+        $stmt->execute(array(
+            'name' => $name,
+        ));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     static function getValidatorByID(PDO $PDO, int $id):array
     {
@@ -231,4 +266,9 @@ class getValidator
     {
         
     }
+}
+
+class addValidator
+{
+    // TODO: Do zaimplementowania klasa dodająca nowych walidatorów
 }

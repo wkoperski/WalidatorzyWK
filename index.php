@@ -9,7 +9,12 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-CONST PORT_WEB_SERVICE = '62787';
+
+
+IF (isset($_SERVER['COMPUTERNAME']) && $_SERVER['COMPUTERNAME'] == 'WL850') {
+    $_SESSION['access_token'] = 'local';
+}
+
 function my_custom_autoloader( $class_name ):void
 {
     $file = __DIR__.$class_name.'.php';
@@ -37,7 +42,7 @@ if(isset($_GET['code']))
         'client_id' => $clientId,
         'grant_type' => 'authorization_code',
         'code'  =>  $_GET['code'],
-        'redirect_uri'=>'http://localhost:'.PORT_WEB_SERVICE.'/WalidatorzyWK/index.php',
+        'redirect_uri'=>'https://adminwk.wielton.com.pl/index.php',
         'client_secret'=>$clientSecret
     );
 
@@ -73,7 +78,7 @@ $accessToken = $token->access_token;*/
 if (isset($_SESSION['access_token']))
 {
 
-    $env = parse_ini_file('env');
+    $env = parse_ini_file('env-dev');
 
 
     $db = new PDO("mysql:host=". $env['HOST'] .";dbname=". $env['DB_NAME'] .";port=". $env['PORT'], $env['USER'],$env['PASSWORD']);
@@ -82,10 +87,54 @@ if (isset($_SESSION['access_token']))
     $smart->assign('walidatorzy', $stmt->fetchAll(PDO::FETCH_ASSOC));
     $smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
     $smart->assign('StatisticsTransaction',\Validator\ValidatorStatisticsFormalVerification::getStatisticsTransactionVerification($db));
+echo '<pre>';
+var_dump($_POST);
+echo '</pre>';
 
+    /** ZMIANA WALIDATORA **/
+    if (isset($_POST['change_verification_formal'])  && isset($_POST['new_validator_verification_formal']))
+    {
+        FormalVerification\changeFormalVeryfication::changeValidator($db,$_POST['change_verification_formal'], Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_formal']));
+        $smart->assign('komunikat', "Dla weryfikacji <strong>".$_POST['change_verification_formal']."</strong> został zmieniony walidator na ".Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_formal'])->getName());
+        //$smart->assign('return',true);
+        $smart->display('Validators/delete.tpl');
+        exit();
+    }
+
+
+    /* AKTYWACJA WALIDATORA */
+    if(isset($_POST['validator_enabled']))
+    {
+
+        \Validator\statusValidators::enabledValidator($db,\Validator\Validator::getValidatorByName($db,$_POST['validator_enabled']));
+        $smart->assign('komunikat','Walidator został <strong>włączony</strong>');
+        $smart->assign('return',true);
+        $smart->display('Validators/delete.tpl');
+        exit();
+    }
+    /* KONIEC AKTYWACJA WALIDATORA */
+
+    /*USUWANIE WALIDATORÓW*/
     if(isset($_POST['validator_delete']))
     {
         $validator_delete = \Validator\Validator::getValidatorByName($db, $_POST['validator_delete']);
+
+        if(\Validator\checkValidator::IsActiveValidationsFormal($db, \Validator\Validator::getValidatorByName($db, $_POST['validator_delete'])) ==0 && \Validator\checkValidator::IsActiveValidationsTransaction($db, \Validator\Validator::getValidatorByName($db, $_POST['validator_delete'])) ==0)
+        {
+            $smart->assign('komunikat','Walidator został wyłączony');
+            \Validator\statusValidators::disbaledValidator($db,$validator_delete);
+            $smart->assign('return',true);
+        }
+
+        if(isset($_POST['delete_verification_formal']))
+        {
+            \FormalVerification\deleteFormalVeryfication::delete($db,$_POST['delete_verification_formal']);
+            $smart->assign('komunikat', "Została usunięta weryfikacja transakcyjna o id: ".$_POST['delete_verification_formal']);
+
+        }
+
+
+
 
         try {
             if (\Validator\checkValidator::IsActiveValidationsFormal($db, \Validator\Validator::getValidatorByName($db, $_POST['validator_delete'])) > 0) {
@@ -98,10 +147,11 @@ if (isset($_SESSION['access_token']))
 
 
 
+
             }
             if (\Validator\checkValidator::IsActiveValidationsTransaction($db, \Validator\Validator::getValidatorByName($db, $_POST['validator_delete'])) > 0) {
                 try {
-                    $result = TransactionVerification\getTransactionVerification::byValidatorName($db, \Validator\Validator::getValidatorByName($db, $_POST['validator_delete']));
+                    $result = TransactionVerification\getTransactionVerification::byValidatorName($db, \Validator\Validator::getValidatorByName($db, $_POST['validator_delete']),\FormalVerification\VerificationStatus::IN_ACCEPTANCE);
                     $smart->assign('transactionVerificationList', $result);
                 } catch (Exception $e) {
 
@@ -110,23 +160,35 @@ if (isset($_SESSION['access_token']))
 
 
             }
+
         } catch (Exception $e) {
 
         }
+        $val=\Validator\getValidator::getValidatorAll($db);
+        $opt = array();
+        $opt+= array(0 =>'Wybierz walidatora');
+        foreach($val as $row)
+            {
+                $opt+= array(
+                    $row['id']  => $row['nazwa']
+                );
+            }
+
+
         $smart->assign('deleteValidatorName',$_POST['validator_delete']);
-        $smart->assign('listValidators', \Validator\getValidator::getValidatorAll($db));
-        $smart->display('test.tpl');
+        $smart->assign('listValidators',$opt);
+        $smart->display('Validators/delete.tpl');
         exit();
     }
+
+
     
 
     $smart->display('index.tpl');
 
 
 } else {
-    $smart->assign('port',PORT_WEB_SERVICE);
     $smart->display('login.tpl');
-    //echo "<a href='https://login.microsoftonline.com/62d8e948-4039-40ed-8aaa-260464b28114/oauth2/v2.0/authorize?client_id=287bf80e-a546-4f3d-a9d5-65a01b6e5588&response_type=code&redirect_uri=http://localhost:63352//WalidatorzyWK/index.php&response_mode=query&scope=offline_access%20user.read'>Zaloguj</a>";
 }
 
 
@@ -134,7 +196,7 @@ if (isset($_SESSION['access_token']))
 if (isset($_GET['action']) && $_GET['action'] == 'login'){
     $params = array (
         'client_id' =>$clientId,
-        'redirect_uri' =>'http://localhost:'.PORT_WEB_SERVICE.'/WalidatorzyWK/index.php',
+        'redirect_uri' =>'https://adminwk.wielton.com.pl/index.php',
         'response_type' =>'id_token',
         'response_mode' =>'form_post',
         'scope' =>'https://graph.microsoft.com/User.Read',
