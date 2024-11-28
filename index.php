@@ -11,6 +11,7 @@ error_reporting(E_ALL);
 
 
 
+
 IF (isset($_SERVER['COMPUTERNAME']) && $_SERVER['COMPUTERNAME'] == 'WL850') {
     $_SESSION['access_token'] = 'local';
 }
@@ -189,6 +190,7 @@ echo '</pre>';
 
 } else {
     $smart->display('login.tpl');
+
 }
 
 
@@ -215,7 +217,7 @@ if(isset($_GET['code']))
         'client_id' => $clientId,
         'grant_type' => 'authorization_code',
         'code'  =>  $_GET['code'],
-        'redirect_uri'=>'http://localhost:63352/Admin/index.php',
+        'redirect_uri'=>'https://adminwk.wielton.com.pl/index.php',
         'client_secret'=>$clientSecret
     );
 
