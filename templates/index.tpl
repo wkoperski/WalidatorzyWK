@@ -161,7 +161,7 @@
 
                                                         {/if}
                                                         {if $walidator['aktywny'] == 0}
-                                                            <button type="button" class="btn btn-success">Aktywuj</button>
+                                                            <button type="submit" class="btn btn-success" name="validator_enabled" value="{$walidator['nazwa']}">Aktywuj</button>
                                                         {/if}
 
                                                     </td>

@@ -75,7 +75,7 @@
 
 
             <!-- Default Table -->
-            <form action="index.php" method="POST">
+            <form action="index.php/validators/delete" method="POST">
 
                 {if isset($formalVerificationList)}
                     <h5 class="card-title">Aktywne weryfikacje formalne dla tego walidatora</h5>
@@ -101,7 +101,7 @@
                                 <td>{$veryfication['zglaszajacy']}</td>
                                 <td>{$veryfication['ocena_wiarygodnosci']}</td>
                                 <td>
-                                    <button type="submit" class="btn btn-danger" name="delete_verification_formal">Usuń</button>
+                                    <button type="submit" class="btn btn-danger" name="delete_verification_formal" value="{$veryfication['id']}">Usuń</button>
                                     <input type="hidden" name="validator_delete" value="{$veryfication['id']}">
                                 </td>
                                 <td>
@@ -157,7 +157,7 @@
                                 <td>{$veryfication['zglaszajacy']}</td>
                                 <td>{$veryfication['wynik_weryfikacji']}</td>
                                 <td>
-                                    <button type="submit" class="btn btn-danger" name="delete_verification_formal">Usuń</button>
+                                    <button type="submit" class="btn btn-danger" name="delete_verification_formal" value="{$veryfication['guid']}">Usuń</button>
                                     <input type="hidden" name="validator_delete" value="{$veryfication['guid']}">
                                 </td>
                                 <td>

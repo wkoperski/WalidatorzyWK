@@ -2,12 +2,12 @@
 
 namespace FormalVerification;
 
+use Validator\checkValidator;
 use Validator\Validator;
 
 enum VerificationStatus: string
 {
     case ALL = '*';
-    case ACCEPT = "AKCEPTACJA";
     case REJECTED = "ODRZUCONA";
     case IN_ACCEPTANCE = "W AKCEPTACJI";
 
@@ -42,3 +42,30 @@ class getFormalVerification
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }
+
+class deleteFormalVeryfication
+{
+    static function delete(\PDO $PDO, string $guid):void
+    {
+
+        $stmt = $PDO->prepare("DELETE FROM weryfikacja_formalna WHERE id=:id");
+        $stmt->execute(array(
+            'id'    => $guid
+        ));
+
+
+    }
+}
+
+class changeFormalVeryfication
+{
+    static function changeValidator(\PDO $PDO,string $guid, Validator $validator)
+    {
+        $stmt = $PDO->prepare("UPDATE weryfikacja_formalna SET walidator = :name  WHERE guid=:guid");
+        $stmt->execute(array(
+            'guid'    => $guid,
+            'name'    => $validator->getName()
+        ));
+    }
+}
+
