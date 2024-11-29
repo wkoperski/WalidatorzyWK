@@ -24,7 +24,7 @@ class getTransactionVerification implements iMethodGetVerification
         $param = '';
         if($status == null)
         {
-            $query = "SELECT weryfikacja_formalna.guid,weryfikacja_transakcyjna.guid weryfikacja_formalna.nazwa, weryfikacja_formalna.nip,weryfikacja_transakcyjna.zglaszajacy, weryfikacja_transakcyjna.wynik_weryfikacji 
+            $query = "SELECT weryfikacja_transakcyjna.guid, weryfikacja_formalna.nazwa, weryfikacja_formalna.nip,weryfikacja_transakcyjna.zglaszajacy, weryfikacja_transakcyjna.wynik_weryfikacji 
 FROM weryfikacja_transakcyjna INNER JOIN weryfikacja_formalna ON weryfikacja_transakcyjna.formalna = weryfikacja_formalna.id 
 WHERE weryfikacja_transakcyjna.walidator=:walidator";
             $param = array(":walidator" => $validator->getName());
@@ -32,7 +32,7 @@ WHERE weryfikacja_transakcyjna.walidator=:walidator";
 
         if($status = 'W AKCEPTACJI')
         {
-            $query = "SELECT weryfikacja_formalna.guid, weryfikacja_formalna.nazwa, weryfikacja_formalna.nip,weryfikacja_transakcyjna.zglaszajacy, weryfikacja_transakcyjna.wynik_weryfikacji 
+            $query = "SELECT weryfikacja_transakcyjna.guid, weryfikacja_formalna.nazwa, weryfikacja_formalna.nip,weryfikacja_transakcyjna.zglaszajacy, weryfikacja_transakcyjna.wynik_weryfikacji 
 FROM weryfikacja_transakcyjna INNER JOIN weryfikacja_formalna ON weryfikacja_transakcyjna.formalna = weryfikacja_formalna.id 
 WHERE weryfikacja_transakcyjna.walidator=:walidator AND weryfikacja_transakcyjna.status='W AKCEPTACJI'";
             $param = array(
@@ -45,5 +45,16 @@ WHERE weryfikacja_transakcyjna.walidator=:walidator AND weryfikacja_transakcyjna
             $param
         );
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+}
+class changeTransactionVeryfication
+{
+    static function changeValidator(\PDO $PDO,string $guid, Validator $validator)
+    {
+        $stmt = $PDO->prepare("UPDATE weryfikacja_transakcyjna SET walidator = :name  WHERE guid=:guid");
+        $stmt->execute(array(
+            'guid'    => $guid,
+            'name'    => $validator->getName()
+        ));
     }
 }

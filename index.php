@@ -12,9 +12,9 @@ error_reporting(E_ALL);
 
 
 
-IF (isset($_SERVER['COMPUTERNAME']) && $_SERVER['COMPUTERNAME'] == 'WL850') {
+/*IF (isset($_SERVER['COMPUTERNAME']) && $_SERVER['COMPUTERNAME'] == 'WL850') {
     $_SESSION['access_token'] = 'local';
-}
+}*/
 
 function my_custom_autoloader( $class_name ):void
 {
@@ -88,6 +88,7 @@ if (isset($_SESSION['access_token']))
     $smart->assign('walidatorzy', $stmt->fetchAll(PDO::FETCH_ASSOC));
     $smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
     $smart->assign('StatisticsTransaction',\Validator\ValidatorStatisticsFormalVerification::getStatisticsTransactionVerification($db));
+
 echo '<pre>';
 var_dump($_POST);
 echo '</pre>';
@@ -98,6 +99,15 @@ echo '</pre>';
         FormalVerification\changeFormalVeryfication::changeValidator($db,$_POST['change_verification_formal'], Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_formal']));
         $smart->assign('komunikat', "Dla weryfikacji <strong>".$_POST['change_verification_formal']."</strong> został zmieniony walidator na ".Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_formal'])->getName());
         //$smart->assign('return',true);
+        $smart->display('Validators/delete.tpl');
+        exit();
+    }
+
+    if (isset($_POST['change_verification_transaction'])  && isset($_POST['new_validator_verification_transaction']))
+    {
+        TransactionVerification\changeTransactionVeryfication::changeValidator($db,$_POST['change_verification_transaction'], Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_transaction']));
+        $smart->assign('komunikat', "Dla weryfikacji <strong>".$_POST['change_verification_transaction']."</strong> został zmieniony walidator na ".Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_transaction'])->getName());
+       /* $smart->assign('return',true);*/
         $smart->display('Validators/delete.tpl');
         exit();
     }

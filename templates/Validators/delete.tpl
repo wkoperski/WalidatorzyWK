@@ -55,7 +55,7 @@
         }
     }
 
-   function nowyWalidator(e)
+   function nowyWalidator(e,name)
     {
 
         let id = e.value;
@@ -65,7 +65,7 @@
 
         input.setAttribute("type", "hidden");
 
-        input.setAttribute("name", "new_validator_verification_formal");
+        input.setAttribute("name", name);
 
         input.setAttribute("value", id);
 
@@ -155,7 +155,7 @@
 
                                     </td>
                                     <td>
-                                        <select class="form-control choices-single" onchange="nowyWalidator(this)" >
+                                        <select class="form-control choices-single" onchange="nowyWalidator(this,'new_validator_verification_formal')" >
                                             {html_options  options=$listValidators selected=$mySelect}
                                         </select>
                                     </td>
@@ -192,15 +192,12 @@
                                     <td>{$veryfication['zglaszajacy']}</td>
                                     <td>{$veryfication['wynik_weryfikacji']}</td>
                                     <td id="atrybuty">
-                                        <button type="submit" class="btn btn-danger" name="delete_verification_formal" value="{$veryfication['guid']}">Usuń</button>
+                                        <button type="submit" class="btn btn-danger" name="delete_verification_transaction" value="{$veryfication['guid']}">Usuń</button>
                                         <input type="hidden" name="validator_delete" value="{$deleteValidatorName}">
-                                        <input type="hidden" name="change_verification_transaction" value="{$veryfication['guid']}">
-
-
-                                    </td>
+                                        <input type="hidden" name="change_verification_transaction" value="{$veryfication['guid']}">                                    </td>
                                     <td>
 
-                                        <select class="form-control choices-single" onchange="nowyWalidator(this,document)" name="new_validator_verification_transaction">
+                                        <select class="form-control choices-single" onchange="nowyWalidator(this,'new_validator_verification_transaction')">
                                             {html_options  options=$listValidators selected=$mySelect}
                                         </select>
                                        {* <select class="form-control choices-single" *}{*onchange="this.form.submit()" *}{*name="new_validator_verification_transaction">
