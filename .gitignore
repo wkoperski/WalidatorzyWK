@@ -8,3 +8,6 @@ Vagrantfile
 /NiceAdmin/
 /templates_c/
 /env-dev
+.github/workflows
+/test.php
+/tests/
