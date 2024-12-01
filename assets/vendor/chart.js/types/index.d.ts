@@ -680,7 +680,7 @@ export interface Defaults extends CoreChartOptions<ChartType>, ElementChartOptio
   /**
    * Routes the named defaults to fallback to another scope/name.
    * This routing is useful when those target values, like defaults.color, are changed runtime.
-   * If the values would be copied, the runtime change would not take effect. By routing, the
+   * If the values would be copied, the runtime update would not take effect. By routing, the
    * fallback is evaluated at each access, so its always up to date.
    *
    * Example:
@@ -2538,7 +2538,7 @@ export interface TitleOptions {
    */
   fullSize: boolean;
   /**
-   *   Adds padding above and below the title text if a single number is specified. It is also possible to change top and bottom padding separately.
+   *   Adds padding above and below the title text if a single number is specified. It is also possible to update top and bottom padding separately.
    */
   padding: number | { top: number; bottom: number };
   /**

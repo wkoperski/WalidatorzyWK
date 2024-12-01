@@ -8058,7 +8058,7 @@ function isDataItemOption(dataItem) {
  *     component, rather than the order of new option. Because we should ensure
  *     some specified index reference (like xAxisIndex) keep work.
  *     And in most cases, "merge option" is used to update partial option but not
- *     be expected to change the order.
+ *     be expected to update the order.
  *
  * Mode "replaceMege":
  *     (1) Only the id mapped components will be merged.
@@ -12823,7 +12823,7 @@ getter) {
  *
  * Set element as highlight / downplay dispatcher.
  * It will be checked when element received mouseover event or from highlight action.
- * It's in change of all highlight/downplay behavior of it's children.
+ * It's in update of all highlight/downplay behavior of it's children.
  *
  * @param el
  * @param el.highDownSilentOnTouch
@@ -15260,7 +15260,7 @@ function setTextStyleCommon(textStyle, textStyleModel, opt, isNotNormal, isAttac
         // FIXME: consider `label: {formatter: '{a|xx}', color: 'blue', rich: {a: {}}}`,
         // the default color `'blue'` will not be adopted if no color declared in `rich`.
         // That might confuses users. So probably we should put `textStyleModel` as the
-        // root ancestor of the `richTextStyle`. But that would be a break change.
+        // root ancestor of the `richTextStyle`. But that would be a break update.
         setTokenTextStyle(richResult[name_1] = {}, richTextStyle, globalTextStyle, opt, isNotNormal, isAttached, false, true);
       }
     }
@@ -18576,7 +18576,7 @@ var OptionManager = /** @class */function () {
     }
     // FIXME
     // Whether mediaDefault should force users to provide? Otherwise
-    // the change by media query can not be recorvered.
+    // the update by media query can not be recorvered.
     if (!indices.length && mediaDefault) {
       indices = [-1];
     }
@@ -19378,7 +19378,7 @@ function isSourceInstance(val) {
 }
 /**
  * Create a source from option.
- * NOTE: Created source is immutable. Don't change any properties in it.
+ * NOTE: Created source is immutable. Don't update any properties in it.
  */
 function createSource(sourceData, thisMetaRawOption,
 // can be null. If not provided, auto detect it from `sourceData`.
@@ -20527,7 +20527,7 @@ var FilterEqualityComparator = /** @class */function () {
  * + "others"
  * "numeric" vs "numeric": values are ordered by number order.
  * "non-numeric-string" vs "non-numeric-string": values are ordered by ES spec (#sec-abstract-relational-comparison).
- * "others" vs "others": do not change order (always return 0).
+ * "others" vs "others": do not update order (always return 0).
  * "numeric" vs "non-numeric-string": "non-numeric-string" is treated as "incomparable".
  * "number" vs "others": "others" is treated as "incomparable".
  * "non-numeric-string" vs "others": "others" is treated as "incomparable".
@@ -22191,7 +22191,7 @@ var SourceManager = /** @class */function () {
   SourceManager.prototype._getUpstreamSourceManagers = function () {
     // Always get the relationship from the raw option.
     // Do not cache the link of the dependency graph, so that
-    // there is no need to update them when change happens.
+    // there is no need to update them when update happens.
     var sourceHost = this._sourceHost;
     if (isSeries(sourceHost)) {
       var datasetModel = querySeriesUpstreamDatasetModel(sourceHost);
@@ -29147,7 +29147,7 @@ var SeriesData = /** @class */function () {
     // Methods that create a new list based on this list should be listed here.
     // Notice that those method should `RETURN` the new list.
     this.TRANSFERABLE_METHODS = ['cloneShallow', 'downSample', 'lttbDownSample', 'map'];
-    // Methods that change indices of this list should be listed here.
+    // Methods that update indices of this list should be listed here.
     this.CHANGABLE_METHODS = ['filterSelf', 'selectRange'];
     this.DOWNSAMPLE_METHODS = ['downSample', 'lttbDownSample'];
     var dimensions;
@@ -29896,7 +29896,7 @@ var SeriesData = /** @class */function () {
   };
   /**
    * Shallow clone a new list except visual and layout properties, and graph elements.
-   * New list only change the indices.
+   * New list only update the indices.
    */
   SeriesData.prototype.cloneShallow = function (list) {
     if (!list) {
@@ -31449,7 +31449,7 @@ function doCalBarWidthAndOffset(seriesInfoList) {
     // Caution: In a single coordinate system, these barGrid attributes
     // will be shared by series. Consider that they have default values,
     // only the attributes set on the last series will work.
-    // Do not change this fact unless there will be a break change.
+    // Do not update this fact unless there will be a break update.
     var barWidth = seriesInfo.barWidth;
     if (barWidth && !stacks[stackId].width) {
       // See #6312, do not restrict width.
@@ -33571,7 +33571,7 @@ function calculateCategoryInterval(axis) {
   // Always choose the bigger one, otherwise the critical
   // point is not the same when zooming in or zooming out.
   && lastAutoInterval > interval
-  // If the axis change is caused by chart resize, the cache should not
+  // If the axis update is caused by chart resize, the cache should not
   // be used. Otherwise some hidden labels might not be shown again.
   && cache.axisExtent0 === axisExtent[0] && cache.axisExtent1 === axisExtent[1]) {
     interval = lastAutoInterval;
@@ -39353,7 +39353,7 @@ var LineView = /** @class */function (_super) {
         }
       });
       // In the case data zoom triggered refreshing frequently
-      // Data may not change if line has a category axis. So it should animate nothing.
+      // Data may not update if line has a category axis. So it should animate nothing.
       if (!isPointsSame(this._stackedOnPoints, stackedOnPoints) || !isPointsSame(this._points, points)) {
         if (hasAnimation) {
           this._doUpdateAnimation(data, stackedOnPoints, coordSys, api, step, valueOrigin, connectNulls);
@@ -40671,8 +40671,8 @@ var BarView = /** @class */function (_super) {
           }
         }
       }
-      // Not change anything if only order changed.
-      // Especially not change label.
+      // Not update anything if only order changed.
+      // Especially not update label.
       else {
         updateStyle(el, data, newIndex, itemModel, layout, seriesModel, isHorizontalOrRadial, coord.type === 'polar');
       }
@@ -40791,7 +40791,7 @@ var BarView = /** @class */function (_super) {
   /*
    * Consider the case when A and B changed order, whose representing
    * bars are both out of sight, we don't wish to trigger reorder action
-   * as long as the order in the view doesn't change.
+   * as long as the order in the view doesn't update.
    */
   BarView.prototype._isOrderDifferentInView = function (orderInfo, baseAxis) {
     var scale = baseAxis.scale;
@@ -41800,7 +41800,7 @@ function constrainTextWidth(layout, availableWidth, forceRecalculate) {
   }
 }
 function isPositionCenter(sectorShape) {
-  // Not change x for center label
+  // Not update x for center label
   return sectorShape.position === 'center';
 }
 function pieLabelLayout(seriesModel) {
@@ -43595,7 +43595,7 @@ function alignScaleTicks(scale, axisModel, alignToScale) {
     var range = interval * alignToSplitNumber;
     max = Math.ceil(rawExtent[1] / interval) * interval;
     min = round(max - range);
-    // Not change the result that crossing zero.
+    // Not update the result that crossing zero.
     if (min < 0 && rawExtent[0] >= 0) {
       min = 0;
       max = round(range);
@@ -47816,7 +47816,7 @@ var MapDraw = /** @class */function () {
       if (el instanceof Displayable) {
         el.culling = true;
       }
-      // We do not know how the SVG like so we'd better not to change z2.
+      // We do not know how the SVG like so we'd better not to update z2.
       // Otherwise it might bring some unexpected result. For example,
       // an area hovered that make some inner city can not be clicked.
       el.z2EmphasisLift = 0;
@@ -50390,7 +50390,7 @@ function linkSeriesData(opt) {
   });
   // Beyond transfer, additional features should be added to `cloneShallow`.
   mainData.wrapMethod('cloneShallow', curry(cloneShallowInjection, opt));
-  // Only mainData trigger change, because struct.update may trigger
+  // Only mainData trigger update, because struct.update may trigger
   // another changable methods, which may bring about dead lock.
   each(mainData.CHANGABLE_METHODS, function (methodName) {
     mainData.wrapMethod(methodName, curry(changeInjection, opt));
@@ -52436,7 +52436,7 @@ function renderNode(seriesModel, thisStorage, oldStorage, reRoot, lastsForAnimat
     });
     if (thisInvisible) {
       // If invisible, do not set visual, otherwise the element will
-      // change immediately before animation. We think it is OK to
+      // update immediately before animation. We think it is OK to
       // remain its origin color when moving out of the view window.
       processInvisible(bg);
     } else {
@@ -52491,7 +52491,7 @@ function renderNode(seriesModel, thisStorage, oldStorage, reRoot, lastsForAnimat
     });
     if (thisInvisible) {
       // If invisible, do not set visual, otherwise the element will
-      // change immediately before animation. We think it is OK to
+      // update immediately before animation. We think it is OK to
       // remain its origin color when moving out of the view window.
       processInvisible(content);
     } else {
@@ -59266,7 +59266,7 @@ var ParallelAxisView = /** @class */function (_super) {
   //         .updateCovers(getCoverInfoList(axisModel));
   // }
   ParallelAxisView.prototype._refreshBrushController = function (builderOpt, areaSelectStyle, axisModel, coordSysModel, areaWidth, api) {
-    // After filtering, axis may change, select area needs to be update.
+    // After filtering, axis may update, select area needs to be update.
     var extent = axisModel.axis.getExtent();
     var extentLen = extent[1] - extent[0];
     var extra = Math.min(30, Math.abs(extentLen) * 0.1); // Arbitrary value.
@@ -65671,7 +65671,7 @@ allPropsFinal, clearStyle) {
       // (1) When using init animation on `style.opacity`, and before the animation
       //     ended users triggers an update by mousewhel. At that time the init
       //     animation should better be continued rather than terminated.
-      //     So after `useStyle` called, we should change the animation target manually
+      //     So after `useStyle` called, we should update the animation target manually
       //     to continue the effect of the init animation.
       // (2) PENDING: If the previous animation targeted at a `val1`, and currently we need
       //     to update the value to `val2` and no animation declared, should be terminate
@@ -66308,7 +66308,7 @@ api, el, dataIndex, elOption, attachedTxInfo, seriesModel, isInit) {
 function updateElOnState(state, el, elStateOpt, styleOpt, attachedTxInfo) {
   var elDisplayable = el.isGroup ? null : el;
   var txCfgOpt = attachedTxInfo && attachedTxInfo[state].cfg;
-  // PENDING:5.0 support customize scale change and transition animation?
+  // PENDING:5.0 support customize scale update and transition animation?
   if (elDisplayable) {
     // By default support auto lift color when hover whether `emphasis` specified.
     var stateObj = elDisplayable.ensureState(state);
@@ -66399,7 +66399,7 @@ function makeRenderItem(customSeries, data, ecModel, api) {
     encode: wrapEncodeDef(customSeries.getData())
   };
   // If someday intending to refactor them to a class, should consider do not
-  // break change: currently these attribute member are encapsulated in a closure
+  // break update: currently these attribute member are encapsulated in a closure
   // so that do not need to force user to call these method with a scope.
   // Do not support call `api` asynchronously without dataIndexInside input.
   var currDataIndexInside;
@@ -66977,7 +66977,7 @@ var BaseAxisPointer = /** @class */function () {
     // Otherwise status is 'show'
     var elOption = {};
     this.makeElOption(elOption, value, axisModel, axisPointerModel, api);
-    // Enable change axis pointer type.
+    // Enable update axis pointer type.
     var graphicKey = elOption.graphicKey;
     if (graphicKey !== this._lastGraphicKey) {
       this.clear(api);
@@ -67086,7 +67086,7 @@ var BaseAxisPointer = /** @class */function () {
     if (labelEl) {
       labelEl.setStyle(elOption.label.style);
       updateProps(labelEl, {
-        // Consider text length change in vertical axis, animation should
+        // Consider text length update in vertical axis, animation should
         // be used on shape, otherwise the effect will be weird.
         // TODOTODO
         // shape: elOption.label.shape,
@@ -70666,10 +70666,10 @@ function mergeNewElOptionToExist(existList, index, newElOption) {
     if (existElOption) {
       if ("development" !== 'production') {
         var newType = newElOption.type;
-        assert(!newType || existElOption.type === newType, 'Please set $action: "replace" to change `type`');
+        assert(!newType || existElOption.type === newType, 'Please set $action: "replace" to update `type`');
       }
       // We can ensure that newElOptCopy and existElOption are not
-      // the same object, so `merge` will not change newElOptCopy.
+      // the same object, so `merge` will not update newElOptCopy.
       merge(existElOption, newElOptCopy, true);
       // Rigid body, use ignoreSize.
       mergeLayoutParam(existElOption, newElOptCopy, {
@@ -70909,7 +70909,7 @@ var GraphicComponentView = /** @class */function (_super) {
       }
       // Remove unnecessary props to avoid potential problems.
       var elOptionCleaned = getCleanedElOption(elOption);
-      // For simple, do not support parent change, otherwise reorder is needed.
+      // For simple, do not support parent update, otherwise reorder is needed.
       if ("development" !== 'production') {
         elExisting && assert(targetElParent === elExisting.parent, 'Changing parent is not supported.');
       }
@@ -71034,7 +71034,7 @@ var GraphicComponentView = /** @class */function (_super) {
       // PENDING
       // Currently, when `bounding: 'all'`, the union bounding rect of the group
       // does not include the rect of [0, 0, group.width, group.height], which
-      // is probably weird for users. Should we make a break change for it?
+      // is probably weird for users. Should we make a break update for it?
       var layoutPos = {};
       var layouted = positionElement(el, elOption, containerInfo, null, {
         hv: elOption.hv,
@@ -71789,7 +71789,7 @@ var AxisProxy = /** @class */function () {
     return clone(this._minMaxSpan);
   };
   /**
-   * Only calculate by given range and this._dataExtent, do not change anything.
+   * Only calculate by given range and this._dataExtent, do not update anything.
    */
   AxisProxy.prototype.calculateDataWindow = function (opt) {
     var dataExtent = this._dataExtent;
@@ -72080,8 +72080,8 @@ var dataZoomProcessor = {
       // In this case, [20, 80] of y-dataZoom should be based on data
       // that have filtered by x-dataZoom using range of [30, 70],
       // but should not be based on full raw data. Thus sliding
-      // x-dataZoom will change both ranges of xAxis and yAxis,
-      // while sliding y-dataZoom will only change the range of yAxis.
+      // x-dataZoom will update both ranges of xAxis and yAxis,
+      // while sliding y-dataZoom will only update the range of yAxis.
       // So we should filter x-axis after reset x-axis immediately,
       // and then reset y-axis and filter y-axis.
       dataZoomModel.eachTargetAxis(function (axisDim, axisIndex) {
@@ -73059,7 +73059,7 @@ var DataView = /** @class */function (_super) {
       if (contentToOption == null && optionToContent != null || contentToOption != null && optionToContent == null) {
         if ("development" !== 'production') {
           // eslint-disable-next-line
-          warn('It seems you have just provided one of `contentToOption` and `optionToContent` functions but missed the other one. Data change is ignored.');
+          warn('It seems you have just provided one of `contentToOption` and `optionToContent` functions but missed the other one. Data update is ignored.');
         }
         close();
         return;
@@ -73900,7 +73900,7 @@ function getComputedStyle(el, style) {
 var CSS_TRANSITION_VENDOR = toCSSVendorPrefix(TRANSITION_VENDOR, 'transition');
 var CSS_TRANSFORM_VENDOR = toCSSVendorPrefix(TRANSFORM_VENDOR, 'transform');
 // eslint-disable-next-line
-var gCssText = "position:absolute;display:block;border-style:solid;white-space:nowrap;z-index:9999999;" + (env.transform3dSupported ? 'will-change:transform;' : '');
+var gCssText = "position:absolute;display:block;border-style:solid;white-space:nowrap;z-index:9999999;" + (env.transform3dSupported ? 'will-update:transform;' : '');
 function mirrorPos(pos) {
   pos = pos === 'left' ? 'right' : pos === 'right' ? 'left' : pos === 'top' ? 'bottom' : 'top';
   return pos;
@@ -79790,7 +79790,7 @@ function disposeCoordSysRecord(coordSysRecordMap, coordSysRecord) {
   }
 }
 function createCoordSysRecord(api, coordSysModel) {
-  // These init props will never change after record created.
+  // These init props will never update after record created.
   var coordSysRecord = {
     model: coordSysModel,
     containsPoint: curry(containsPoint, coordSysModel),
@@ -79944,7 +79944,7 @@ var InsideZoomView = /** @class */function (_super) {
     }
     // Hence the `throttle` util ensures to preserve command order,
     // here simply updating range all the time will not cause missing
-    // any of the the roam change.
+    // any of the the roam update.
     this.range = dataZoomModel.getPercentRange();
     // Reset controllers.
     setViewInfoToCoordSysRecord(api, dataZoomModel, {
@@ -80381,7 +80381,7 @@ var SliderZoomView = /** @class */function (_super) {
     }
     var polygonPts = this._shadowPolygonPts;
     var polylinePts = this._shadowPolylinePts;
-    // Not re-render if data doesn't change.
+    // Not re-render if data doesn't update.
     if (data !== this._shadowData || otherDim !== this._shadowDim || size[0] !== oldSize[0] || size[1] !== oldSize[1]) {
       var otherDataExtent_1 = data.getDataExtent(otherDim);
       // Nice extent.
@@ -81201,7 +81201,7 @@ var VisualMapModel = /** @class */function (_super) {
       // Compatible with previous logic, always give a default color, otherwise
       // simple config with no inRange and outOfRange will not work.
       // Originally we use visualMap.color as the default color, but setOption at
-      // the second time the default color will be erased. So we change to use
+      // the second time the default color will be erased. So we update to use
       // constant DEFAULT_COLOR.
       // If user do not want the default color, set inRange: {color: null}.
       base.inRange = base.inRange || {
@@ -82154,7 +82154,7 @@ var ContinuousView = /** @class */function (_super) {
     if (handleLabels) {
       for (var i = 0; i < handleLabels.length; i++) {
         // Fade out handle labels.
-        // NOTE: Must use api enter/leave on emphasis/blur/select state. Or the global states manager will change it.
+        // NOTE: Must use api enter/leave on emphasis/blur/select state. Or the global states manager will update it.
         this.api.enterBlur(handleLabels[i]);
       }
     }
@@ -82262,7 +82262,7 @@ var ContinuousView = /** @class */function (_super) {
     if (handleLabels) {
       for (var i = 0; i < handleLabels.length; i++) {
         // Fade out handle labels.
-        // NOTE: Must use api enter/leave on emphasis/blur/select state. Or the global states manager will change it.
+        // NOTE: Must use api enter/leave on emphasis/blur/select state. Or the global states manager will update it.
         this.api.leaveBlur(handleLabels[i]);
       }
     }

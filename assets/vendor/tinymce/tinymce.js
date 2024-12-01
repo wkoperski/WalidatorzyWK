@@ -21249,7 +21249,7 @@
       if (isNotEmpty(placeholder)) {
         editor.on('init', e => {
           updatePlaceholder(e, true);
-          editor.on('change SetContent ExecCommand', updatePlaceholder);
+          editor.on('update SetContent ExecCommand', updatePlaceholder);
           editor.on('paste', e => Delay.setEditorTimeout(editor, () => updatePlaceholder(e)));
         });
       }

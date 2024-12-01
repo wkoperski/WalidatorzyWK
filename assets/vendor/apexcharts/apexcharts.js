@@ -1418,7 +1418,7 @@
        * @memberof Graphics
        * @param {object}
        *  i = series's index
-       *  realIndex = realIndex is series's actual index when it was drawn time. After several redraws, the iterating "i" may change in loops, but realIndex doesn't
+       *  realIndex = realIndex is series's actual index when it was drawn time. After several redraws, the iterating "i" may update in loops, but realIndex doesn't
        *  pathFrom = existing pathFrom to animateTo
        *  pathTo = new Path to which d attr will be animated from pathFrom to pathTo
        *  stroke = line Color
@@ -3265,7 +3265,7 @@
             // deduce this is due to the number of ticks exceeding the even lower
             // integer range. Add an additional decimal place only in this case.
             var f = v.toFixed(0);
-            // Do not change the == to ===
+            // Do not update the == to ===
             v = v == f ? f : v.toFixed(1);
           }
         }
@@ -10561,7 +10561,7 @@
               stepSize = crudeStep;
             }
           } else {
-            // default ticks in use, tiks can change
+            // default ticks in use, tiks can update
             if (gotStepSize) {
               if (Utils$1.mod(range, stepSize) == 0) {
                 // user stepSize fits
@@ -11406,7 +11406,7 @@
 
         // if the numbers are too big, reduce the range
         // for eg, if number is between 100000-110000, putting 0 as the lowest
-        // value is not so good idea. So change the gl.minY for
+        // value is not so good idea. So update the gl.minY for
         // line/area/scatter/candlesticks/boxPlot/vertical rangebar
         if (cnf.chart.type === 'line' || cnf.chart.type === 'area' || cnf.chart.type === 'scatter' || cnf.chart.type === 'candlestick' || cnf.chart.type === 'boxPlot' || cnf.chart.type === 'rangeBar' && !gl.isBarHorizontal) {
           if (gl.minY === Number.MIN_VALUE && lowestYInAllSeries !== -Number.MAX_VALUE && lowestYInAllSeries !== gl.maxY // single value possibility
@@ -14867,7 +14867,7 @@
             transform: 'translate(' + translateX + ', ' + translateY + ')'
           };
 
-          // change styles based on zoom or selection
+          // update styles based on zoom or selection
           // zoom is Enabled and user has dragged, so draw blue rect
           if (w.globals.zoomEnabled && this.dragged) {
             if (width < 0) width = 1; // fixes apexcharts.js#1168
@@ -15156,7 +15156,7 @@
 
         // check to make sure there is data to compare against
         if (typeof w.globals.lastClientPosition.x !== 'undefined') {
-          // get the change from last position to this position
+          // get the update from last position to this position
           var deltaX = w.globals.lastClientPosition.x - me.clientX;
           var deltaY = w.globals.lastClientPosition.y - me.clientY;
 
@@ -24221,7 +24221,7 @@
           if (adjustedMonthInTimeScaleArray.length > ticks) {
             modulo = Math.floor(adjustedMonthInTimeScaleArray.length / ticks);
           }
-          var shouldNotSkipUnit = false; // there is a big change in unit i.e days to months
+          var shouldNotSkipUnit = false; // there is a big update in unit i.e days to months
           var shouldNotPrint = false; // should skip these values
 
           switch (_this.tickInterval) {
@@ -30896,7 +30896,7 @@
 
           this.el.on('point.resize', function(e){ _this.resize(e || window.event); }); // Point-Moving
 
-          // This call ensures, that the plugin reacts to a change of snapToGrid immediately
+          // This call ensures, that the plugin reacts to a update of snapToGrid immediately
           this.update();
 
       };
@@ -30968,7 +30968,7 @@
                           // ...if valid, we resize the this.el (which can include moving because the coord-system starts at the left-top and this edge is moving sometimes when resized)
 
                           /*
-                           * but first check if the element is text box, so we can change the font size instead of
+                           * but first check if the element is text box, so we can update the font size instead of
                            * the width and height
                            */
 
@@ -31119,7 +31119,7 @@
 
                       var angle = this.parameters.rotation + (pAngle - sAngle) * 180 / Math.PI + this.options.snapToAngle / 2;
 
-                      // We have to move the element to the center of the box first and change the rotation afterwards
+                      // We have to move the element to the center of the box first and update the rotation afterwards
                       // because rotation always works around a rotation-center, which is changed when moving the element
                       // We also set the new rotation center to the center of the box.
                       this.el.center(this.parameters.box.cx, this.parameters.box.cy).rotate(angle - (angle % this.options.snapToAngle), this.parameters.box.cx, this.parameters.box.cy);

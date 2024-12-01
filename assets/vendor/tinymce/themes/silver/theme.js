@@ -2275,7 +2275,7 @@
     const focusShifted = prefixName('focusmanager.shifted');
     const slotVisibility = prefixName('slotcontainer.visibility');
     const externalElementScroll = prefixName('system.external.element.scroll');
-    const changeTab = prefixName('change.tab');
+    const changeTab = prefixName('update.tab');
     const dismissTab = prefixName('dismiss.tab');
     const highlight$1 = prefixName('highlight');
     const dehighlight$1 = prefixName('dehighlight');
@@ -14885,7 +14885,7 @@
       components: [text$2(providersBackstage.translate(label))]
     });
 
-    const formChangeEvent = generate$6('form-component-change');
+    const formChangeEvent = generate$6('form-component-update');
     const formCloseEvent = generate$6('form-close');
     const formCancelEvent = generate$6('form-cancel');
     const formActionEvent = generate$6('form-action');
@@ -15210,8 +15210,8 @@
       parts: { menu: part(false, 1, spec.presets) }
     });
 
-    const colorInputChangeEvent = generate$6('color-input-change');
-    const colorSwatchChangeEvent = generate$6('color-swatch-change');
+    const colorInputChangeEvent = generate$6('color-input-update');
+    const colorSwatchChangeEvent = generate$6('color-swatch-update');
     const colorPickerCancelEvent = generate$6('color-picker-cancel');
     const renderColorInput = (spec, sharedBackstage, colorInputBackstage, initialData) => {
       const pField = FormField.parts.field({
@@ -15422,7 +15422,7 @@
       spectrumPart
     ];
 
-    const _sliderChangeEvent = 'slider.change.value';
+    const _sliderChangeEvent = 'slider.update.value';
     const sliderChangeEvent = constant$1(_sliderChangeEvent);
     const isTouchEvent$2 = evt => evt.type.indexOf('touch') !== -1;
     const getEventSource = simulatedEvent => {
@@ -17797,7 +17797,7 @@
         selectBehaviours: derive$1([
           Disabling.config({ disabled: () => !spec.enabled || providersBackstage.isDisabled() }),
           Tabstopping.config({}),
-          config('selectbox-change', [run$1(change(), (component, _) => {
+          config('selectbox-update', [run$1(change(), (component, _) => {
               emitWith(component, formChangeEvent, { name: spec.name });
             })])
         ])
@@ -18260,7 +18260,7 @@
             return Optional.some(true);
           }
         }),
-        config('textfield-change', [
+        config('textfield-update', [
           run$1(input(), (component, _) => {
             emitWith(component, formChangeEvent, { name: spec.name });
           }),
@@ -21191,7 +21191,7 @@
         getBehaviours: getBehaviours$1
     });
 
-    const toolbarHeightChange = constant$1(generate$6('toolbar-height-change'));
+    const toolbarHeightChange = constant$1(generate$6('toolbar-height-update'));
 
     const visibility = {
       fadeInClass: 'tox-editor-dock-fadein',
@@ -26103,7 +26103,7 @@
 
     const forwardSlideEvent = generate$6('forward-slide');
     const backSlideEvent = generate$6('backward-slide');
-    const changeSlideEvent = generate$6('change-slide-event');
+    const changeSlideEvent = generate$6('update-slide-event');
     const resizingClass = 'tox-pop--resizing';
     const renderContextToolbar = spec => {
       const stack = Cell([]);

@@ -59,7 +59,7 @@ export class Defaults {
     /**
        * Routes the named defaults to fallback to another scope/name.
        * This routing is useful when those target values, like defaults.color, are changed runtime.
-       * If the values would be copied, the runtime change would not take effect. By routing, the
+       * If the values would be copied, the runtime update would not take effect. By routing, the
        * fallback is evaluated at each access, so its always up to date.
        *
        * Example:

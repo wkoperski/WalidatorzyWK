@@ -140,7 +140,7 @@ export class Tooltip extends Element<import("../types/basic.js").AnyObject, impo
        * Determine if the active elements + event combination changes the
        * tooltip position
        * @param {array} active - Active elements
-       * @param {ChartEvent} e - Event that triggered the position change
+       * @param {ChartEvent} e - Event that triggered the position update
        * @returns {boolean} True if the position has changed
        */
     _positionChanged(active: any[], e: ChartEvent): boolean;
