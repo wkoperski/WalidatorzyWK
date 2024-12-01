@@ -1,7 +1,9 @@
 {
+  "name": "some/name",
+  "description": "Some description will be useful too!",
   "require": {
-    "smarty/smarty": "@stable",
-    "guzzle/http": "@stable",
+    "smarty/smarty": "^v5.4.1",
+    "guzzle/http": "3.9.2",
     "guzzlehttp/guzzle": "^7.0",
     "ext-pdo": "*",
     "ext-curl": "*"
