@@ -1,14 +1,8 @@
 <?php
-
-namespace TransactionVerification;
+namespace Verification\Transaction;
 
 use Validator\Validator;
-use FormalVerification\VerificationStatus;
-
-class Transaction
-{
-
-}
+use Verification\Formal\VerificationStatus;
 
 interface iMethodGetVerification
 {
@@ -45,16 +39,5 @@ WHERE weryfikacja_transakcyjna.walidator=:walidator AND weryfikacja_transakcyjna
             $param
         );
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    }
-}
-class changeTransactionVeryfication
-{
-    static function changeValidator(\PDO $PDO,string $guid, Validator $validator)
-    {
-        $stmt = $PDO->prepare("UPDATE weryfikacja_transakcyjna SET walidator = :name  WHERE guid=:guid");
-        $stmt->execute(array(
-            'guid'    => $guid,
-            'name'    => $validator->getName()
-        ));
     }
 }

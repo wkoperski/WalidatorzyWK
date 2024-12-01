@@ -1,27 +1,34 @@
 <?php
 session_start();
 include "vendor/autoload.php";
-require_once(__DIR__.'/Validator.php');
-require_once(__DIR__.'/Verification/Formal.php');
-require_once(__DIR__.'/Verification/Transaction.php');
+
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
+use Verification\Formal\VerificationStatus;
+use Verification\Transaction\getTransactionVerification;
 
 
-/*IF (isset($_SERVER['COMPUTERNAME']) && $_SERVER['COMPUTERNAME'] == 'WL850') {
+if (isset($_SERVER['COMPUTERNAME']) && ($_SERVER['COMPUTERNAME'] == 'WL850' || $_SERVER['COMPUTERNAME'] == 'DESKTOP-8ON889J')) {
     $_SESSION['access_token'] = 'local';
-}*/
+}
 
 function my_custom_autoloader( $class_name ):void
 {
     $file = __DIR__.$class_name.'.php';
+    $parts = explode('\\', $class_name);
+    $file2 = $filename = __DIR__.'\\src' . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $class_name) . '.php';
+
 
     if ( file_exists($file) ) {
         require_once $file;
+    }
+    if ( file_exists($file2)) {
+        var_dump($file2);
+        require_once $file2;
     }
 }
 spl_autoload_register( 'my_custom_autoloader' );
@@ -66,15 +73,7 @@ if(isset($_GET['code']))
 
 
 }
-/*$token = json_decode($guzzle->post($url, [
-    'form_params' => [
-        'client_id' => $clientId,
-        'client_secret' => $clientSecret,
-        'scope' => 'https://graph.microsoft.com/.default',
-        'grant_type' => 'client_credentials',
-    ],
-])->getBody()->getContents());
-$accessToken = $token->access_token;*/
+
 
 if (isset($_SESSION['access_token']))
 {
@@ -105,7 +104,7 @@ echo '</pre>';
 
     if (isset($_POST['change_verification_transaction'])  && isset($_POST['new_validator_verification_transaction']))
     {
-        TransactionVerification\changeTransactionVeryfication::changeValidator($db,$_POST['change_verification_transaction'], Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_transaction']));
+        Verification\Transaction\changeTransactionVeryfication::changeValidator($db,$_POST['change_verification_transaction'], Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_transaction']));
         $smart->assign('komunikat', "Dla weryfikacji <strong>".$_POST['change_verification_transaction']."</strong> został zmieniony walidator na ".Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_transaction'])->getName());
        /* $smart->assign('return',true);*/
         $smart->display('Validators/delete.tpl');
@@ -116,12 +115,12 @@ echo '</pre>';
     /* AKTYWACJA WALIDATORA */
     if(isset($_POST['validator_enabled']))
     {
+        try {
+            Controller\Validators\enabled::enabled($smart, $db, $_POST['validator_enabled']);
+        } catch (\Smarty\Exception $e) {
 
-        \Validator\statusValidators::enabledValidator($db,\Validator\Validator::getValidatorByName($db,$_POST['validator_enabled']));
-        $smart->assign('komunikat','Walidator został <strong>włączony</strong>');
-        $smart->assign('return',true);
-        $smart->display('Validators/delete.tpl');
-        exit();
+        }
+
     }
     /* KONIEC AKTYWACJA WALIDATORA */
 
@@ -162,7 +161,7 @@ echo '</pre>';
             }
             if (\Validator\checkValidator::IsActiveValidationsTransaction($db, \Validator\Validator::getValidatorByName($db, $_POST['validator_delete'])) > 0) {
                 try {
-                    $result = TransactionVerification\getTransactionVerification::byValidatorName($db, \Validator\Validator::getValidatorByName($db, $_POST['validator_delete']),\FormalVerification\VerificationStatus::IN_ACCEPTANCE);
+                    $result = getTransactionVerification::byValidatorName($db, \Validator\Validator::getValidatorByName($db, $_POST['validator_delete']),VerificationStatus::IN_ACCEPTANCE);
                     $smart->assign('transactionVerificationList', $result);
                 } catch (Exception $e) {
 
@@ -218,37 +217,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'login'){
     exit();
 }
 
-
-
-if(isset($_GET['code']))
-{
-
-    $postParameter = array(
-        'client_id' => $clientId,
-        'grant_type' => 'authorization_code',
-        'code'  =>  $_GET['code'],
-        'redirect_uri'=>'https://adminwk.wielton.com.pl/index.php',
-        'client_secret'=>$clientSecret
-    );
-
-    $curlHandle = curl_init('https://login.microsoftonline.com/62d8e948-4039-40ed-8aaa-260464b28114/oauth2/v2.0/token');
-    curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $postParameter);
-    curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
-
-    $curlResponse = curl_exec($curlHandle);
-    /*echo json_decode($curlResponse);*/
-
-    $json = json_decode($curlResponse);
-    if (isset($json->access_token))
-    {
-        setcookie('access_token', $json->access_token, time() + (3599 * 30), "/"); // 86400 = 1 day
-        $_SESSION['access_token'] = $json->access_token;
-        var_dump($_SESSION['access_token']);
-    }
-
-
-
-}
 
 if (isset($_POST['access_token'])) {
     $_SESSION['t'] = $_POST['access_token'];
