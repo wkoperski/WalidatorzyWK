@@ -254,21 +254,42 @@ class getValidator
     }
     static function getValidatorByID(PDO $PDO, int $id):array
     {
-
+        //TODO : Pobieranie walidatorów po ID
     }
 
     static function getValidatorByEmail(PDO $PDO, string $email):array
     {
-
+        $stmt = $PDO->prepare("Select id,nazwa,email,aktywny FROM walidatorzy WHERE email =:email ");
+        $stmt->execute(array(
+            'email' => $email,
+        ));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     static function getValidatorByStatus(PDO $PDO, int $status):array
     {
-        
+        //TODO : pobieranie walidatorów po statucie
     }
 }
 
 class addValidator
 {
+    private int $count_row;
+    public function __construct(PDO $PDO,public string $name, public string $email)
+    {
+        $stmt = $PDO->prepare("INSERT INTO walidatorzy (nazwa, email, aktywny) VALUES (:nazwa, :email, 1)");
+        $stmt->execute(array(
+            'nazwa' => $this->name,
+            'email' => $this->email
+        ));
+        $this->count_row = $stmt->rowCount();
+    }
+
+    public function getCountRow(): int
+    {
+        return $this->count_row;
+    }
+
     // TODO: Do zaimplementowania klasa dodająca nowych walidatorów
+
 }

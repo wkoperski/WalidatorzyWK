@@ -23,6 +23,7 @@ function my_custom_autoloader( $class_name ):void
     if ( file_exists($file) ) {
         require_once $file;
     }
+
 }
 spl_autoload_register( 'my_custom_autoloader' );
 
@@ -82,16 +83,39 @@ if (isset($_SESSION['access_token']))
     $env = parse_ini_file('env-dev');
 
 
-    $db = new PDO("mysql:host=". $env['HOST'] .";dbname=". $env['DB_NAME'] .";port=". $env['PORT'], $env['USER'],$env['PASSWORD']);
-    $stmt = $db->prepare("SELECT * FROM Walidatorzy ORDER BY Nazwa" );
+    $db = new PDO("mysql:host=". $env['HOST'] .";dbname=". $env['DB_NAME'] .";port=". $env['DB_PORT'], $env['DB_USER'],$env['DB_PASSWORD']);
+    /*$stmt = $db->prepare("SELECT * FROM Walidatorzy ORDER BY Nazwa" );
     $stmt->execute();
     $smart->assign('walidatorzy', $stmt->fetchAll(PDO::FETCH_ASSOC));
     $smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
     $smart->assign('StatisticsTransaction',\Validator\ValidatorStatisticsFormalVerification::getStatisticsTransactionVerification($db));
 
-echo '<pre>';
-var_dump($_POST);
-echo '</pre>';
+    /** DODAJ WALIDATORA **/
+
+    if(isset($_GET['dodaj_walidatora']))
+    {
+        if(isset($_POST['name']) && isset($_POST['email']))
+        {
+
+            if(count(\Validator\getValidator::getValidatorByName($db,$_POST['name'])) == 0 && count(\Validator\getValidator::getValidatorByEmail($db,$_POST['email'])) == 0)
+            {
+
+                $smart->assign('komunikat','Nowy Walidator: <strong>'.$_POST['name'].'</strong> został dodany');
+                //TODO : DODAĆ OBSŁUGĘ DODAWANIA NOWEGO WALIDATORA
+                $new_walidator = new \Validator\addValidator($db,$_POST['name'],$_POST['email']);
+
+            } else {
+                $smart->assign('alert_type','danger');
+                $smart->assign('komunikat','Istnieje już taki walidator o nazwie: '.$_POST['name'].' lub adresie email: '.$_POST['email']);
+            }
+
+        }
+        $smart->assign('show_walidatorzy_nav',1);
+        $smart->assign('show_walidatorzy_add',1);
+        $smart->display('Validators/add.tpl');
+        exit();
+    }
+
 
     /** ZMIANA WALIDATORA **/
     if (isset($_POST['change_verification_formal'])  && isset($_POST['new_validator_verification_formal']))
