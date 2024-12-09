@@ -84,7 +84,7 @@ if (isset($_SESSION['access_token']))
 
 
     $db = new PDO("mysql:host=". $env['HOST'] .";dbname=". $env['DB_NAME'] .";port=". $env['DB_PORT'], $env['DB_USER'],$env['DB_PASSWORD']);
-    /*$stmt = $db->prepare("SELECT * FROM Walidatorzy ORDER BY Nazwa" );
+    $stmt = $db->prepare("SELECT * FROM Walidatorzy ORDER BY Nazwa" );
     $stmt->execute();
     $smart->assign('walidatorzy', $stmt->fetchAll(PDO::FETCH_ASSOC));
     $smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
