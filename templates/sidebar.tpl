@@ -82,14 +82,14 @@
             <a class="nav-link collapsed" data-bs-target="#reliably-nav" data-bs-toggle="collapse" href="#">
                 <i class="ri ri-account-box-line"></i><span>Wiarygodni</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="reliably-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <ul id="reliably-nav" class="nav-content collapse {if $show_wiarygodni_nav}show{/if}" data-bs-parent="#sidebar-nav">
                 <li>
                     <a href="components-alerts.html">
                         <i class="bi bi-circle"></i><span>Statystyki</span>
                     </a>
                 </li>
                 <li>
-                    <a href="components-accordion.html">
+                    <a href="index.php?wiarygodni_lista" {if $show_wiarygodni_lista}class="active"{/if}">
                         <i class="bi bi-circle"></i><span>Zgłoszeni</span>
                     </a>
                 </li>

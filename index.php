@@ -4,7 +4,7 @@ include "vendor/autoload.php";
 require_once(__DIR__.'/Validator.php');
 require_once(__DIR__.'/Verification/Formal.php');
 require_once(__DIR__.'/Verification/Transaction.php');
-
+require_once(__DIR__.'/src/Suppliers/Reliable/Reliable.php');
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -90,6 +90,17 @@ if (isset($_SESSION['access_token']))
     $smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
     $smart->assign('StatisticsTransaction',\Validator\ValidatorStatisticsFormalVerification::getStatisticsTransactionVerification($db));
 
+    /** WIARYGODNI LISTA */
+    if(isset($_GET['wiarygodni_lista']))
+    {
+        $Reliable = new \Suppliers\Reliable\getReliableActive($db);
+        $smart->assign('wiarygodni_lista',$Reliable->getReliable()->checkReVerification()->checkBeOne());
+        $smart->assign('show_wiarygodni_nav',1);
+        $smart->assign('show_wiarygodni_lista',1);
+        $smart->display('Suppliers/Reliable/list.tpl');
+        exit();
+    }
+
     /** DODAJ WALIDATORA **/
 
     if(isset($_GET['dodaj_walidatora']))
@@ -101,7 +112,7 @@ if (isset($_SESSION['access_token']))
             {
 
                 $smart->assign('komunikat','Nowy Walidator: <strong>'.$_POST['name'].'</strong> został dodany');
-                //TODO : DODAĆ OBSŁUGĘ DODAWANIA NOWEGO WALIDATORA
+
                 $new_walidator = new \Validator\addValidator($db,$_POST['name'],$_POST['email']);
 
             } else {
