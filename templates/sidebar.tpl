@@ -94,12 +94,12 @@
                     </a>
                 </li>
                 <li>
-                    <a href="components-accordion.html">
+                    <a href="index.php?wiarygodni_dodaj" {if $show_wiarygodni_dodaj}class="active"{/if}>
                         <i class="bi bi-circle"></i><span>Dodawanie</span>
                     </a>
                 </li>
                 <li>
-                    <a href="components-badges.html">
+                    <a href="index.php?wiarygodni_usun" {if $show_wiarygodni_usun}class="active"{/if}>
                         <i class="bi bi-circle"></i><span>Usuwanie</span>
                     </a>
                 </li>

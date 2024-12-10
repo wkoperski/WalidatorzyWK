@@ -3,10 +3,10 @@
     "smarty/smarty": "@stable",
     "guzzle/http": "@stable",
     "guzzlehttp/guzzle": "^7.0",
+    "phpmailer/phpmailer": "@stable",
+    "mikehaertl/phpwkhtmltopdf": "@stable",
     "ext-pdo": "*",
     "ext-curl": "*"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "10.2.4"
   }
+
 }

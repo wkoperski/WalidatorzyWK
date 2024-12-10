@@ -31,7 +31,7 @@ class getReliableActive
 
     public function getReliableFull(): array
     {
-        $stmt = $this->PDO->prepare("select * from zgloszeni_wiarygodni JOIN weryfikacja_formalna ON zgloszeni_wiarygodni.guid_wf= weryfikacja_formalna.guid ORDER BY weryfikacja_formalna.nazwa ASC");
+        $stmt = $this->PDO->prepare("select * from zgloszeni_wiarygodni JOIN weryfikacja_formalna ON zgloszeni_wiarygodni.guid_wf= weryfikacja_formalna.guid WHERE zgloszeni_wiarygodni.accept IS NULL and zgloszeni_wiarygodni.rejection =0   ORDER BY weryfikacja_formalna.nazwa ASC");
         $stmt->execute();
 
 
@@ -69,6 +69,38 @@ class getReliableActive
         }
 
     }
+
+    public function getAcceptReliable():array
+    {
+        $stmt = $this->PDO->prepare("select weryfikacja_formalna.nazwa, weryfikacja_formalna.nip, weryfikacja_formalna.ocena_wiarygodnosci from zgloszeni_wiarygodni JOIN weryfikacja_formalna ON weryfikacja_formalna.guid = zgloszeni_wiarygodni.guid_wf WHERE accept IS NOT NULL");
+        $stmt->execute();
+
+
+        return  $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function acceptReliable(string $guid_wf):void
+    {
+        $stmt = $this->PDO->prepare("UPDATE zgloszeni_wiarygodni SET accept=true WHERE guid_wf=:guid_wf");
+
+            $stmt->execute(
+                array(
+                    'guid_wf'   => $guid_wf,
+                )
+            );
+    }
+
+    public function rejectionReliable(string $guid_wf):void
+    {
+        $stmt = $this->PDO->prepare("UPDATE zgloszeni_wiarygodni SET rejection=true WHERE guid_wf=:guid_wf");
+
+        $stmt->execute(
+            array(
+                'guid_wf'   => $guid_wf,
+            )
+        );
+    }
+    
     public function checkReVerification():static
     {
         $result = array();

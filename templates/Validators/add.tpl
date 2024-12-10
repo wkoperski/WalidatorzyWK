@@ -64,7 +64,7 @@
     <div class="col-lg-12">
         <div class="card">
             {if isset($komunikat)}
-            <div class="card-body">
+                <div class="card-body">
                     <h5 class="card-title"></h5>
                     <div class="alert alert-{if isset($alert_type)}{$alert_type}{else}success{/if}" role="alert" id="komunikat">
                         {$komunikat}
@@ -73,8 +73,8 @@
                             Za chwilę zostanie załadowana poprzednia strona
                             <input type="hidden" id="return" >
                         {/if}
+                    </div>
                 </div>
-            </div>
             {/if}
         </div>
         <div class="card">

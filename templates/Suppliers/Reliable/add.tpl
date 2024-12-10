@@ -59,7 +59,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.php">Home</a></li>
                 <li class="breadcrumb-item"><a href="index.php?walidatorzy_lista">Wiarygodni</a></li>
-                <li class="breadcrumb-item active">Zgłoszeni do wiarygodnych</li>
+                <li class="breadcrumb-item active">Dodawanie/li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -74,96 +74,101 @@
                             <path fill-rule="evenodd" d="M3.5 10a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 0 0 1h2A1.5 1.5 0 0 0 14 9.5v-8A1.5 1.5 0 0 0 12.5 0h-9A1.5 1.5 0 0 0 2 1.5v8A1.5 1.5 0 0 0 3.5 11h2a.5.5 0 0 0 0-1z"></path>
                             <path fill-rule="evenodd" d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708z"></path>
                         </svg>
-                        Export CSV
+                        Export WORD
                     </button>
                 </form>
             </div>
 
         </div>
-    <div class="col-lg-12">
-        <div class="card">
-            {if isset($komunikat)}
-                <div class="card-body">
-                    <h5 class="card-title"></h5>
-                    <div class="alert alert-{if isset($alert_type)}{$alert_type}{else}success{/if}" role="alert" id="komunikat">
-                        {$komunikat}
-                        {if isset($return)}
-                            <br/>
-                            Za chwilę zostanie załadowana poprzednia strona
-                            <input type="hidden" id="return" >
-                        {/if}
+        <div class="col-lg-12">
+            <div class="card">
+                {if isset($komunikat)}
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <div class="alert alert-{if isset($alert_type)}{$alert_type}{else}success{/if}" role="alert" id="komunikat">
+                            {$komunikat}
+                            {if isset($return)}
+                                <br/>
+                                Za chwilę zostanie załadowana poprzednia strona
+                                <input type="hidden" id="return" >
+                            {/if}
+                        </div>
                     </div>
+                {/if}
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Do zgłoszenia na zarząd</h5>
+
+                    <!-- Horizontal Form -->
+                    <form action="index.php?wiarygodni_lista" method="post">
+                        <table class="table table-sm">
+                            <thead>
+                            <tr class="small">
+                                <th scope="col">#</th>
+                                <th scope="col">Nazwa</th>
+                                <th scope="col">NIP</th>
+                                <th scope="col">Ocena wiarygodności</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {assign var=counter value=1}
+                            {foreach from=$wiarygodni_lista item=wiarygodny}
+
+                                <tr {if isset($wiarygodny['checkBeoneCooperation']) &&  $wiarygodny['checkBeoneCooperation'] == false} class="table-danger" {/if}>
+                                    <th scope="row">{$counter++}</th>
+                                    <td><small>{$wiarygodny['nazwa']}<a href="index.php?weryfikacja_formalna?guid=xxx" target="_blank"> <i class="bi bi-arrow-up-right-circle"></i></a> </small></td>
+                                    <td>{$wiarygodny['nip']}</td>
+                                    <td><small>{$wiarygodny['ocena_wiarygodnosci']}</small></td>
+
+
+                            {/foreach}
+
+
+                            </tbody>
+                        </table>
+                        <!-- End Horizontal Form -->
+                    </form>
                 </div>
-            {/if}
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Zgłoszeni do wiarygodnych</h5>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Zgłoszone na zarząd</h5>
 
-                <!-- Horizontal Form -->
-                <form action="index.php?wiarygodni_lista" method="post">
-                <table class="table table-sm">
-                    <thead>
-                    <tr class="small">
-                        <th scope="col">#</th>
-                        <th scope="col">Nazwa</th>
-                        <th scope="col">NIP</th>
-                        <th scope="col">Ocena wiarygodności</th>
-                        <th scope="col">Współpraca > 2 lata</th>
-                        <th scope="col">Data pierwszej faktury</th>
-                        <th scope="col">Data ostatniej faktury</th>
-                        <th scope="col">Ponowne zgłoszenie</th>
-                        <th scope="col">Operacje</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {assign var=counter value=1}
-                    {foreach from=$wiarygodni_lista item=wiarygodny}
+                    <!-- Horizontal Form -->
+                    <form action="index.php?wiarygodni_lista" method="post">
+                        <table class="table table-sm">
+                            <thead>
+                            <tr class="small">
+                                <th scope="col">#</th>
+                                <th scope="col">Nazwa</th>
+                                <th scope="col">NIP</th>
+                                <th scope="col">Ocena wiarygodności</th>
 
-                        <tr {if isset($wiarygodny['checkBeoneCooperation']) &&  $wiarygodny['checkBeoneCooperation'] == false} class="table-danger" {/if}>
-                            <th scope="row">{$counter++}</th>
-                            <td><small>{$wiarygodny['nazwa']}<a href="index.php?weryfikacja_formalna?guid=xxx" target="_blank"> <i class="bi bi-arrow-up-right-circle"></i></a> </small></td>
-                            <td>{$wiarygodny['nip']}</td>
-                            <td><small>{$wiarygodny['ocena_wiarygodnosci']}</small></td>
-                            <td>{if isset($wiarygodny['checkBeoneCooperation']) && $wiarygodny['checkBeoneCooperation'] == true}
-                                    <span class="badge bg-success">TAK</span>
-                                {else}
-                                    <span class="badge bg-danger">NIE</span>
-                                {/if}
-                            </td>
-                            <td>
-                                {if isset($wiarygodny['first_invoice'])}
-                                    {$wiarygodny['first_invoice']}
-                                {/if}
-                            </td>
-                            <td>
-                                {if isset($wiarygodny['last_invoice'])}
-                                    {$wiarygodny['last_invoice']}
-                                {/if}
-                            </td>
-                            <td>
-                                {if $wiarygodny['re_verification'] == '1'}
-                                    <span class="badge bg-success">TAK</span>
-                                {else}
-                                    <span class="badge bg-info">NIE</span>
-                                {/if}
-                            </td>
-                            <td>
-                                <button class="bi bi-trash" type="submit" style="border:none !important;background-color: transparent !important;" name="delete" value="{$wiarygodny['guid']}"></button>
-                                <button type="submit" style="border: none !important;background-color: transparent !important;" name="add" value="{$wiarygodny['guid']}"><i class="bi bi-plus-circle-fill"></i></button>
-                            </td>
-                        </tr>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {assign var=counter value=1}
+                            {foreach from=$wiarygodni_lista item=wiarygodny}
 
-                    {/foreach}
+                            <tr {if isset($wiarygodny['checkBeoneCooperation']) &&  $wiarygodny['checkBeoneCooperation'] == false} class="table-danger" {/if}>
+                                <th scope="row">{$counter++}</th>
+                                <td><small>{$wiarygodny['nazwa']}<a href="index.php?weryfikacja_formalna?guid=xxx" target="_blank"> <i class="bi bi-arrow-up-right-circle"></i></a> </small></td>
+                                <td>{$wiarygodny['nip']}</td>
+                                <td><small>{$wiarygodny['ocena_wiarygodnosci']}</small></td>
 
 
-                    </tbody>
-                </table>
-                <!-- End Horizontal Form -->
-                </form>
+                                {/foreach}
+
+
+                            </tbody>
+                        </table>
+                        <!-- End Horizontal Form -->
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
 
 </main><!-- End #main -->

@@ -11017,7 +11017,7 @@
               tag: 'div',
               classes: ['tox-notifications-container'],
               attributes: {
-                'aria-label': 'Notifications',
+                'aria-label': 'Email',
                 'role': 'region'
               }
             },
