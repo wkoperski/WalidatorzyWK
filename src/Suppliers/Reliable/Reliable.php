@@ -3,6 +3,8 @@
 namespace Suppliers\Reliable;
 
 include "vendor/autoload.php";
+
+use DateTime;
 use PDO;
 use GuzzleHttp\Client;
 
@@ -20,11 +22,20 @@ class getReliableActive
 
     public function getReliable(): static
     {
-        $stmt = $this->PDO->prepare("select * from zgloszeni_do_wiarygodnych");
+        $stmt = $this->PDO->prepare("select * from zgloszeni_do_wiarygodnych WHERE nip not in (SELECT NIP from zgloszeni_wiarygodni)");
         $stmt->execute();
 
         $this->reliable = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $this;
+    }
+
+    public function getReliableFull(): array
+    {
+        $stmt = $this->PDO->prepare("select * from zgloszeni_wiarygodni JOIN weryfikacja_formalna ON zgloszeni_wiarygodni.guid_wf= weryfikacja_formalna.guid ORDER BY weryfikacja_formalna.nazwa ASC");
+        $stmt->execute();
+
+
+        return  $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getNip():array
@@ -42,6 +53,22 @@ class getReliableActive
         return $this->reliable;
     }
 
+    public function addReliable():void
+    {
+        $stmt = $this->PDO->prepare("INSERT INTO zgloszeni_wiarygodni (nip, guid_wf, first_invoice, last_invoice, re_verification) VALUE (?,?,?,?,?) ");
+        foreach ($this->reliable as $row) {
+            $stmt->execute(
+                array(
+                    $row['nip'],
+                    $row['guid'],
+                    (property_exists($row['Beone2'],'firstInvoice')) ? $row['Beone2']->firstInvoice : null,
+                    (property_exists($row['Beone2'],'lastInvoice')) ? $row['Beone2']->lastInvoice : null,
+                    $row['Beone']
+                )
+            );
+        }
+
+    }
     public function checkReVerification():static
     {
         $result = array();
@@ -68,7 +95,27 @@ class getReliableActive
         return $this;
     }
 
-    public function checkBeOne():array
+    private function checkTimeCooperation($firstInvoice):bool
+    {
+
+        $firstInvoiceDate = DateTime::createFromFormat('m-d-Y', str_replace(".", "-", $firstInvoice));
+        $currentDate = new DateTime();
+        $date_test = $firstInvoiceDate->format('Y-m-d');
+        $data2 = new DateTime($date_test);
+        if($currentDate->diff($data2)->y >= 2){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    private function getMonthCooperation($firstInvoice):int
+    {
+
+        $firstInvoiceDate = DateTime::createFromFormat('m-d-Y', str_replace(".", "-", $firstInvoice));
+        $currentDate = new DateTime();
+       return $currentDate->diff($firstInvoiceDate)->m;
+    }
+    public function checkBeOne():static
     {
         $result = array();
 
@@ -76,19 +123,42 @@ class getReliableActive
             // Base URI is used with relative requests
             'base_uri' => 'https://dms.wielton.com.pl/alfresco/s/pl/beone/wielton/invoice/',
             // You can set any number of default request options.
-            'timeout'  => 55.0,
+            'timeout'  => 20.0,
             'verify' => false
 
         ]);
-            $tmp_table = array_slice($this->reliable, 0, 10);
+            $tmp_table = array_slice($this->reliable, 0, 100);
+
         foreach ($tmp_table as $reliable) {
+
+
             $response = $client->request('GET', 'invoiceDateFetcher?nip='.$reliable['nip'],['auth' => ['api_beone', 'VvkcrYy0OROZKLZ3wSGb']]);
             $reliable['Beone2'] = json_decode($response->getBody()->getContents());
 
+            if(!property_exists($reliable['Beone2'], 'firstInvoice'))
+            {
+                $response = $client->request('GET', 'invoiceDateFetcher?nip=PL'.$reliable['nip'],['auth' => ['api_beone', 'VvkcrYy0OROZKLZ3wSGb']]);
+                $reliable['Beone2'] = json_decode($response->getBody()->getContents());
+            }
+
+            if(property_exists($reliable['Beone2'], 'firstInvoice'))
+            {
+                $reliable['checkBeoneCooperation'] = $this->checkTimeCooperation($reliable['Beone2']->firstInvoice);
+                $reliable['monthBeoneCooperation'] = $this->getMonthCooperation($reliable['Beone2']->firstInvoice);
+            } else {
+                $reliable['checkBeoneCooperation'] = 0;
+                $reliable['monthBeoneCooperation'] = 0;
+            }
+
+            /**
+             *PORÓWNANIE DWÓCH LAT
+             */
+
+
             $result[] = $reliable;
         }
-
-        return $result;
+        $this->reliable = $result;
+        return $this;
 
     }
 }

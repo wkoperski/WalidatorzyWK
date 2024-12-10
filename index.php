@@ -83,18 +83,24 @@ if (isset($_SESSION['access_token']))
     $env = parse_ini_file('env-dev');
 
 
-    $db = new PDO("mysql:host=". $env['HOST'] .";dbname=". $env['DB_NAME'] .";port=". $env['DB_PORT'], $env['DB_USER'],$env['DB_PASSWORD']);
-    $stmt = $db->prepare("SELECT * FROM Walidatorzy ORDER BY Nazwa" );
-    $stmt->execute();
-    $smart->assign('walidatorzy', $stmt->fetchAll(PDO::FETCH_ASSOC));
-    $smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
-    $smart->assign('StatisticsTransaction',\Validator\ValidatorStatisticsFormalVerification::getStatisticsTransactionVerification($db));
+   try {
+       $db = new PDO("mysql:host=". $env['HOST'] .";dbname=". $env['DB_NAME'] .";port=". $env['DB_PORT'], $env['DB_USER'],$env['DB_PASSWORD']);
+       $stmt = $db->prepare("SELECT * FROM Walidatorzy ORDER BY Nazwa" );
+       $stmt->execute();
+       $smart->assign('walidatorzy', $stmt->fetchAll(PDO::FETCH_ASSOC));
+       $smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
+       $smart->assign('StatisticsTransaction',\Validator\ValidatorStatisticsFormalVerification::getStatisticsTransactionVerification($db));
+   } catch (Exception $e)
+   {
+        echo $e->getMessage();
+   }
+
 
     /** WIARYGODNI LISTA */
     if(isset($_GET['wiarygodni_lista']))
     {
         $Reliable = new \Suppliers\Reliable\getReliableActive($db);
-        $smart->assign('wiarygodni_lista',$Reliable->getReliable()->checkReVerification()->checkBeOne());
+        $smart->assign('wiarygodni_lista',$Reliable->getReliableFull());
         $smart->assign('show_wiarygodni_nav',1);
         $smart->assign('show_wiarygodni_lista',1);
         $smart->display('Suppliers/Reliable/list.tpl');

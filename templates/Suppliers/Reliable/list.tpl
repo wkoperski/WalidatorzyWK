@@ -39,7 +39,10 @@
 </head>
 
 <body>
-
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
 <!-- ======= Header ======= -->
 {include file="header.tpl"}
 <!-- End Header -->
@@ -82,38 +85,53 @@
                 <h5 class="card-title">Zgłoszeni do wiarygodnych</h5>
 
                 <!-- Horizontal Form -->
-                <table class="table">
+                <table class="table table-sm">
                     <thead>
-                    <tr>
+                    <tr class="small">
                         <th scope="col">#</th>
                         <th scope="col">Nazwa</th>
-                        <th scope="col">NIP</th>
                         <th scope="col">Ocena wiarygodności</th>
-                        <th scope="col">BeOne</th>
-                        <th scope="col">Był już na liście wiarygodnych</th>
+                        <th scope="col">Współpraca > 2 lata</th>
+                        <th scope="col">Data pierwszej faktury</th>
+                        <th scope="col">Data ostatniej faktury</th>
+                        <th scope="col">Ponowne zgłoszenie</th>
+                        <th scope="col">Operacje</th>
                     </tr>
                     </thead>
                     <tbody>
                     {assign var=counter value=1}
                     {foreach from=$wiarygodni_lista item=wiarygodny}
 
-                        <tr>
+                        <tr {if isset($wiarygodny['checkBeoneCooperation']) &&  $wiarygodny['checkBeoneCooperation'] == false} class="table-danger" {/if}>
                             <th scope="row">{$counter++}</th>
-                            <td>{$wiarygodny['nazwa']}</td>
-                            <td>{$wiarygodny['nip']}</td>
-                            <td>{$wiarygodny['ocena_wiarygodnosci']}</td>
-                            <td>
-                                {if isset($wiarygodny['Beone2']->firstInvoice)}
-                                    {$wiarygodny['Beone2']->firstInvoice}
+                            <td><small>{$wiarygodny['nazwa']}<a href="index.php?weryfikacja_formalna?guid=xxx" target="_blank"> <i class="bi bi-arrow-up-right-circle"></i></a> </small></td>
+                            <td><small>{$wiarygodny['ocena_wiarygodnosci']}</small></td>
+                            <td>{if isset($wiarygodny['checkBeoneCooperation']) && $wiarygodny['checkBeoneCooperation'] == true}
+                                    <span class="badge bg-success">TAK</span>
+                                {else}
+                                    <span class="badge bg-danger">NIE</span>
                                 {/if}
-
                             </td>
                             <td>
-                                {if $wiarygodny['Beone'] == '1' || $wiarygodny['Beone'] == 1}
+                                {if isset($wiarygodny['first_invoice'])}
+                                    {$wiarygodny['first_invoice']}
+                                {/if}
+                            </td>
+                            <td>
+                                {if isset($wiarygodny['last_invoice'])}
+                                    {$wiarygodny['last_invoice']}
+                                {/if}
+                            </td>
+                            <td>
+                                {if $wiarygodny['re_verification'] == '1'}
                                     <span class="badge bg-success">TAK</span>
                                 {else}
                                     <span class="badge bg-info">NIE</span>
                                 {/if}
+                            </td>
+                            <td>
+                                <button class="bi bi-trash" type="button" style="border:none !important;background-color: transparent !important;"></button>
+                                <button type="button" style="border: none !important;background-color: transparent !important;"><i class="bi bi-plus-circle-fill"></i></button>
                             </td>
                         </tr>
 
