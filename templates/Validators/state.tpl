@@ -51,11 +51,12 @@
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>Dashboard</h1>
+        <h1>Aktywacja / Dezaktywacja</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard</li>
+                <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                <li class="breadcrumb-item">Walidatorzy</li>
+                <li class="breadcrumb-item active"><a href="index.php?walidatorzy_lista">Lista</a> </li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -65,61 +66,18 @@
             <!-- Left side columns -->
             <div class="col-lg-12">
                 <div class="row">
-
-                    <!-- Sales Card -->
-                    <div class="col-xxl-4 col-md-6">
-                        <div class="card info-card sales-card">
-
-                            <div class="card-body">
-                                <h5 class="card-title">BEZ FORMALNEJ - 30 dni</span></h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-cart"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <h6>145</h6>
-
-
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="col-xxl-4 col-md-6">
-                        <div class="card info-card sales-card">
-
-                            <div class="card-body">
-                                <h5 class="card-title">BEZ TRANSAKCYJNEJ - 30 dni</span></h5>
-
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-cart"></i>
-                                    </div>
-                                    <div class="ps-3">
-                                        <h6>145</h6>
-
-
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                   <!-- End Sales Card -->
+                    <!-- End Sales Card -->
 
                     <!-- Revenue Card -->
-                   <!-- End Revenue Card -->
+                    <!-- End Revenue Card -->
 
                     <!-- Customers Card -->
-                   <!-- End Customers Card -->
-                   {* {if isset($formalVerificationList)}
+                    <!-- End Customers Card -->
+                    {if isset($formalVerificationList)}
                         {include file="test.tpl"}
 
 
-                        {else}
+                    {else}
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
@@ -178,91 +136,12 @@
                             </div>
                         </div>
 
-                        <!-- Lista walidacji -->
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Statystyki Walidatorów - Weryfikacja formalna</h5>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" onclick="filter()">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            Pokaź tylko w akceptacji
-                                        </label>
-                                    </div>
-                                    <!-- Bordered Table -->
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Nazwa</th>
-                                            <th scope="col">W AKCEPTACJI</th>
-                                            <th scope="col">ZAAKCEPTOWANYCH</th>
-                                            <th scope="col">ODRZUCONYCH</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {assign var=counter value=1}
-                                        {foreach from=$StatisticsFormal item=row}
-                                            <tr {if $row['w_akceptacji'] >0} class="table-warning" {/if}>
-                                                <th scope="row">{$counter++}</th>
-                                                <td>{$row['walidator']}</td>
-                                                <td>{$row['w_akceptacji']}</td>
-                                                <td>{$row['akceptacja']}</td>
-                                                <td>{$row['odrzucona']}</td>
-                                            </tr>
-                                        {/foreach}
 
-
-                                        </tbody>
-                                    </table>
-                                    <!-- End Bordered Table -->
-
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Statystyki Walidatorów - Weryfikacja Transakcyjna</h5>
-
-                                    <!-- Bordered Table -->
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Nazwa</th>
-                                            <th scope="col">W AKCEPTACJI</th>
-                                            <th scope="col">ZAAKCEPTOWANYCH</th>
-                                            <th scope="col">ODRZUCONYCH</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {assign var=counter value=1}
-                                        {foreach from=$StatisticsTransaction item=row}
-                                            <tr {if $row['w_akceptacji'] >0} class="table-warning" {/if}>
-                                                <th scope="row">{$counter++}</th>
-                                                <td>{$row['walidator']}</td>
-                                                <td>{$row['w_akceptacji']}</td>
-                                                <td>{$row['akceptacja']}</td>
-                                                <td>{$row['odrzucona']}</td>
-                                            </tr>
-                                        {/foreach}
-                                        </tbody>
-                                    </table>
-                                    <!-- End Bordered Table -->
-
-
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END Lista Walidacji -->
                         <!-- Reports -->
 
                         <!-- End Reports -->
 
-                    {/if}*}
+                    {/if}
 
 
 
