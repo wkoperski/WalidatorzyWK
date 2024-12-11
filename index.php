@@ -112,9 +112,6 @@ if (isset($_SESSION['access_token']))
         if(isset($_POST['zatwierdzeni_wiarygodni']))
         {
            $Reliable->addNipToReliable(explode(PHP_EOL,$_POST['nip_lista']));
-
-
-            $smart->assign('komunikat',$_POST['nip_lista']);
         }
 
         $smart->assign('show_wiarygodni_nav',1);
