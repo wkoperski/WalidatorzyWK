@@ -111,11 +111,8 @@ if (isset($_SESSION['access_token']))
         $Reliable = new \Suppliers\Reliable\getReliableActive($db);
         if(isset($_POST['zatwierdzeni_wiarygodni']))
         {
+           $Reliable->addNipToReliable(explode(PHP_EOL,$_POST['nip_lista']));
 
-            foreach (explode(PHP_EOL,$_POST['nip_lista']) as $row)
-            {
-                $Reliable->addNipToReliable(trim($row));
-            }
 
             $smart->assign('komunikat',$_POST['nip_lista']);
         }
