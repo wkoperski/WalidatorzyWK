@@ -18,4 +18,12 @@ class getValidators
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    static function getValidators(PDO $db):array
+    {
+
+        $stmt = $db->prepare("SELECT * FROM Walidatorzy ORDER BY Nazwa" );
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    }
 }
