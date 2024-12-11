@@ -168,7 +168,12 @@ class getReliableActive
         $date2 = new DateTime(date("Y-m-d", strtotime(str_replace('.', '/', $firstInvoice) ) ));
 
         $data_uzyskania_weryfikacji = $date2->add(DateInterval::createFromDateString('2 year'));
-        return $data_uzyskania_weryfikacji->diff($date1)->format("%d");
+        if($data_uzyskania_weryfikacji->diff($date1)->format("%m") == 0)
+        {
+            return $data_uzyskania_weryfikacji->diff($date1)->format("%d");
+        } else {
+            return $data_uzyskania_weryfikacji->diff($date1)->format("%m") * 30 + $data_uzyskania_weryfikacji->diff($date1)->format("%d");
+        }
     }
     public function checkBeOne():static
     {

@@ -187,13 +187,15 @@ if (isset($_SESSION['access_token']))
             $smart->assign('komunikat','usun');
             $smart->assign('komunikat',$_POST['delete']);
             $email = new Notifications\Email();
-            $email->sendEmail('w.koperski@wielton.com.pl','Odrzucenie zgłoszenia do wiarygodnych','Zgłoszenie o dopisanie dostawcy dla weryfikacji formlanej: <strong>'.$_POST['delete'].'</strong> do listy wiarygodnych zostało odrzucone.');
+
+            //FIXME: wysyłania powiadomień na poprawny adres email.
+            /*$email->sendEmail('w.koperski@wielton.com.pl','Odrzucenie zgłoszenia do wiarygodnych','Zgłoszenie o dopisanie dostawcy dla weryfikacji formlanej: <strong>'.$_POST['delete'].'</strong> do listy wiarygodnych zostało odrzucone.');*/
         }
 
         if(isset($_POST['add']))
         {
             $Reliable->acceptReliable($_POST['add']);
-            $smart->assign('komunikat','usun');
+
         }
 
        
