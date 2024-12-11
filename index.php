@@ -273,7 +273,7 @@ if (isset($_SESSION['access_token']))
     {
        FormalVerification\changeFormalVeryfication::changeValidator($db,$_POST['change_verification_formal'], Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_formal']));
         $smart->assign('komunikat', "Dla weryfikacji <strong>".$_POST['change_verification_formal']."</strong> został zmieniony walidator na ".Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_formal'])->getName());
-        $new_walidator = Validators\getValidator::getValidatorById($db,$_POST['change_verification_formal']);
+        $new_walidator = Validators\getValidator::getValidatorById($db,$_POST['new_validator_verification_formal']);
         $email = new Notifications\Email();
         $email->sendEmail($new_walidator->getEmail(),'Nowa weryfikacja transakcyjna',"Została przydzielona nowa weryfikacja formalna. Zaloguj się na stronie <a href='https://wk.wielton.com.pl'>https://wk.wielton.com.pl</a>'");
         $smart->assign('return',true);
