@@ -39,7 +39,10 @@
 </head>
 
 <body>
-
+<script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
 <!-- ======= Header ======= -->
 {include file="header.tpl"}
 <!-- End Header -->
@@ -55,65 +58,67 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-                <li class="breadcrumb-item"><a href="index.php?walidatorzy_lista">Walidatorzy</a></li>
-                <li class="breadcrumb-item active">Dodaj Walidatora</li>
+                <li class="breadcrumb-item"><a href="index.php?walidatorzy_lista">Weryfikacja formalna</a></li>
+                <li class="breadcrumb-item active">Wyświetl</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
 
-    <div class="col-lg-12">
-        <div class="card">
-            {if isset($komunikat)}
-                <div class="card-body">
-                    <h5 class="card-title"></h5>
-                    <div class="alert alert-{if isset($alert_type)}{$alert_type}{else}success{/if}" role="alert" id="komunikat">
-                        {$komunikat}
-                        {if isset($return)}
-                            <br/>
-                            Za chwilę zostanie załadowana poprzednia strona
-                            <input type="hidden" id="return" >
-                        {/if}
-                    </div>
-                </div>
-            {/if}
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Podaj dane nowego walidatora</h5>
 
-                <!-- Horizontal Form -->
-                <form action="index.php?dodaj_walidatora" method="post">
-                    <div class="row mb-3">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Imię i nazwisko</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="inputText" name="name" required>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-                        <div class="col-sm-10">
-                            <input type="email" class="form-control" id="inputEmail" name="email" required>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-10 offset-sm-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="gridCheck1">
-                                <label class="form-check-label" for="gridCheck1">
-                                    Użytkownik testowy
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Dodaj</button>
-                        <button type="reset" class="btn btn-secondary">Wyczyść</button>
-                    </div>
-                </form><!-- End Horizontal Form -->
 
+        <div class="col-lg-12">
+            <div class="card">
+                {if isset($komunikat)}
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <div class="alert alert-{if isset($alert_type)}{$alert_type}{else}success{/if}" role="alert" id="komunikat">
+                            {$komunikat}
+                            {if isset($return)}
+                                <br/>
+                                Za chwilę zostanie załadowana poprzednia strona
+                                <input type="hidden" id="return" >
+                            {/if}
+                        </div>
+                    </div>
+                {/if}
             </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Szczegóły weryfikacji formalnej</h5>
+
+                    <!-- Horizontal Form -->
+
+                        <table class="table table-sm">
+                            <thead>
+                            <tr class="small">
+                                <th scope="col">#</th>
+                                <th scope="col">Nazwa</th>
+                                <th scope="col">NIP</th>
+                                <th scope="col">Ocena wiarygodności</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {foreach from=$formal_data item=weryfikacja}
+
+                            <tr>
+                                <th scope="row">{$weryfikacja['nazwa']}</th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            {/foreach}
+
+
+                            </tbody>
+                        </table>
+                        <!-- End Horizontal Form -->
+                    </form>
+                </div>
+            </div>
+
         </div>
-    </div>
 
 
 </main><!-- End #main -->

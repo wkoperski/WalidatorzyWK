@@ -4,17 +4,19 @@ include "vendor/autoload.php";
 require_once(__DIR__.'/Validator.php');
 require_once(__DIR__.'/Verification/Formal.php');
 require_once(__DIR__.'/Verification/Transaction.php');
-
+require_once(__DIR__.'/src/Suppliers/Reliable/Reliable.php');
+require_once (__DIR__.'/src/Notifications/Email.php');
+require_once (__DIR__.'/src/Verification/getFormalVerification.php');
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
+use mikehaertl\wkhtmlto\Pdf;
 
-
-/*IF (isset($_SERVER['COMPUTERNAME']) && $_SERVER['COMPUTERNAME'] == 'WL850') {
+IF (isset($_SERVER['COMPUTERNAME']) && $_SERVER['COMPUTERNAME'] == 'WL850') {
     $_SESSION['access_token'] = 'local';
-}*/
+}
 
 function my_custom_autoloader( $class_name ):void
 {
@@ -83,12 +85,122 @@ if (isset($_SESSION['access_token']))
     $env = parse_ini_file('env-dev');
 
 
-    $db = new PDO("mysql:host=". $env['HOST'] .";dbname=". $env['DB_NAME'] .";port=". $env['DB_PORT'], $env['DB_USER'],$env['DB_PASSWORD']);
-    /*$stmt = $db->prepare("SELECT * FROM Walidatorzy ORDER BY Nazwa" );
-    $stmt->execute();
-    $smart->assign('walidatorzy', $stmt->fetchAll(PDO::FETCH_ASSOC));
-    $smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
-    $smart->assign('StatisticsTransaction',\Validator\ValidatorStatisticsFormalVerification::getStatisticsTransactionVerification($db));
+   try {
+       $db = new PDO("mysql:host=". $env['HOST'] .";dbname=". $env['DB_NAME'] .";port=". $env['DB_PORT'], $env['DB_USER'],$env['DB_PASSWORD']);
+       $stmt = $db->prepare("SELECT * FROM Walidatorzy ORDER BY Nazwa" );
+       $stmt->execute();
+       $smart->assign('walidatorzy', $stmt->fetchAll(PDO::FETCH_ASSOC));
+       $smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
+       $smart->assign('StatisticsTransaction',\Validator\ValidatorStatisticsFormalVerification::getStatisticsTransactionVerification($db));
+   } catch (Exception $e)
+   {
+        echo $e->getMessage();
+   }
+
+    /** WERYFIKACJA FORMALNA */
+    if(isset($_GET['weryfikacja_formalna'])) {
+
+        $smart->assign('formal_data',Verification\getFormalVerification::getFormalVerificationByGUID($db,$_GET['guid']));
+        $smart->display('Verification/formal.tpl');
+        exit();
+    }
+   
+   /** WIARYGODNI DODAJ */
+    if(isset($_GET['wiarygodni_dodaj']))
+    {
+        $Reliable = new \Suppliers\Reliable\getReliableActive($db);
+        if(isset($_POST['zatwierdzeni_wiarygodni']))
+        {
+           $Reliable->addNipToReliable(explode(PHP_EOL,$_POST['nip_lista']));
+        }
+
+        $smart->assign('show_wiarygodni_nav',1);
+        $smart->assign('show_wiarygodni_dodaj',1);
+        $smart->assign('wiarygodni_lista',$Reliable->getAcceptReliable());
+        $smart->display('Suppliers/Reliable/add.tpl');
+        unset($Reliable);
+        exit();
+    }
+    /** WIARYGODNI LISTA */
+    if(isset($_GET['wiarygodni_lista']))
+    {
+        $Reliable = new \Suppliers\Reliable\getReliableActive($db);
+        if(isset($_POST['regenerate_list']))
+        {
+            $Reliable->getReliable()->checkReVerification();
+            $Reliable->checkBeOne();
+            $Reliable->addReliable();
+           /*
+            echo '<pre>';
+            var_dump($Reliable->getAll());
+            echo '</pre>';*/
+        }
+        
+        if (isset($_POST['csv']) && !isset($_POST['regenerate_list']))
+        {
+            function array2csv(array $array)
+            {
+                if (count($array) == 0) {
+                    return null;
+                }
+                ob_start();
+                $df = fopen("php://output", 'w');
+                fputcsv($df, array_keys(reset($array)));
+                foreach ($array as $row) {
+                    fputcsv($df, $row);
+                }
+                fclose($df);
+                return ob_get_clean();
+            }
+            function download_send_headers($filename) {
+                // disable caching
+                $now = gmdate("D, d M Y H:i:s");
+                header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+                header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
+                header("Last-Modified: {$now} GMT");
+
+                // force download
+                header("Content-Type: application/force-download");
+                header("Content-Type: application/octet-stream");
+                header("Content-Type: application/download");
+
+                // disposition / encoding on response body
+                header('Content-type: text/csv; charset=UTF-8');
+                header("Content-Disposition: attachment;filename={$filename}");
+                header("Content-Transfer-Encoding: binary");
+            }
+
+            download_send_headers("data_export_" . date("Y-m-d") . ".csv");
+            echo array2csv($Reliable->getReliableFull());
+            die();
+        }
+
+        if(isset($_POST['delete']))
+        {
+            $Reliable->rejectionReliable($_POST['delete']);
+            $smart->assign('komunikat','usun');
+            $smart->assign('komunikat',$_POST['delete']);
+            $email = new Notifications\Email();
+
+            //FIXME: wysyłania powiadomień na poprawny adres email.
+            /*$email->sendEmail('w.koperski@wielton.com.pl','Odrzucenie zgłoszenia do wiarygodnych','Zgłoszenie o dopisanie dostawcy dla weryfikacji formlanej: <strong>'.$_POST['delete'].'</strong> do listy wiarygodnych zostało odrzucone.');*/
+        }
+
+        if(isset($_POST['add']))
+        {
+            $Reliable->acceptReliable($_POST['add']);
+
+        }
+
+       
+        $smart->assign('wiarygodni_lista',$Reliable->getReliableFull());
+        $smart->assign('show_wiarygodni_nav',1);
+        $smart->assign('show_wiarygodni_lista',1);
+        $smart->display('Suppliers/Reliable/list.tpl');
+        unset($Reliable);
+        exit();
+    }
+
 
     /** DODAJ WALIDATORA **/
 
@@ -101,7 +213,7 @@ if (isset($_SESSION['access_token']))
             {
 
                 $smart->assign('komunikat','Nowy Walidator: <strong>'.$_POST['name'].'</strong> został dodany');
-                //TODO : DODAĆ OBSŁUGĘ DODAWANIA NOWEGO WALIDATORA
+
                 $new_walidator = new \Validator\addValidator($db,$_POST['name'],$_POST['email']);
 
             } else {

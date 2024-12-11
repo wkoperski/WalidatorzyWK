@@ -3,3 +3,6 @@ DB_PORT = 3307
 DB_NAME = dostawcy_dev
 DB_USER = dostawcy
 DB_PASSWORD = EaYPTaJzgLT58O6fUxUE
+SMTP_HOST = smtp.office365.com
+SMTP_PASSWORD = 33XX14X1aW
+SMTP_USER = weryfikacja@wielton.com.pl
