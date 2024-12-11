@@ -129,7 +129,7 @@
 
                         <tr {if isset($wiarygodny['checkBeoneCooperation']) &&  $wiarygodny['checkBeoneCooperation'] == false} class="table-danger" {/if}>
                             <th scope="row">{$counter++}</th>
-                            <td><small>{$wiarygodny['nazwa']}<a href="index.php?weryfikacja_formalna?guid=xxx" target="_blank"> <i class="bi bi-arrow-up-right-circle"></i></a> </small></td>
+                            <td><small>{$wiarygodny['nazwa']}<a href="index.php?weryfikacja_formalna&guid={$wiarygodny['guid_wf']}" target="_blank"> <i class="bi bi-arrow-up-right-circle"></i></a> </small></td>
                             <td>{$wiarygodny['nip']}</td>
                             <td><small>{$wiarygodny['ocena_wiarygodnosci']}</small></td>
                             <td>{if isset($wiarygodny['checkBeoneCooperation']) && $wiarygodny['checkBeoneCooperation'] == true }

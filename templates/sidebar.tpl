@@ -109,7 +109,7 @@
         <!-- End Wiarygodni -->
 
         <!-- WPR -->
-        <li class="nav-item">
+        <li class="nav-item disabled" >
             <a class="nav-link collapsed" data-bs-target="#wpr-nav" data-bs-toggle="collapse" href="#">
                 <i class="ri ri-account-box-line"></i><span>WPR</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>

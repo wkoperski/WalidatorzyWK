@@ -6,6 +6,7 @@ require_once(__DIR__.'/Verification/Formal.php');
 require_once(__DIR__.'/Verification/Transaction.php');
 require_once(__DIR__.'/src/Suppliers/Reliable/Reliable.php');
 require_once (__DIR__.'/src/Notifications/Email.php');
+require_once (__DIR__.'/src/Verification/getFormalVerification.php');
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -96,14 +97,34 @@ if (isset($_SESSION['access_token']))
         echo $e->getMessage();
    }
 
+    /** WERYFIKACJA FORMALNA */
+    if(isset($_GET['weryfikacja_formalna'])) {
+
+        $smart->assign('formal_data',Verification\getFormalVerification::getFormalVerificationByGUID($db,$_GET['guid']));
+        $smart->display('Verification/formal.tpl');
+        exit();
+    }
+   
    /** WIARYGODNI DODAJ */
     if(isset($_GET['wiarygodni_dodaj']))
     {
         $Reliable = new \Suppliers\Reliable\getReliableActive($db);
+        if(isset($_POST['zatwierdzeni_wiarygodni']))
+        {
+
+            foreach (explode(PHP_EOL,$_POST['nip_lista']) as $row)
+            {
+                $Reliable->addNipToReliable($row);
+            }
+
+            $smart->assign('komunikat',$_POST['nip_lista']);
+        }
+
         $smart->assign('show_wiarygodni_nav',1);
         $smart->assign('show_wiarygodni_dodaj',1);
         $smart->assign('wiarygodni_lista',$Reliable->getAcceptReliable());
         $smart->display('Suppliers/Reliable/add.tpl');
+        unset($Reliable);
         exit();
     }
     /** WIARYGODNI LISTA */
