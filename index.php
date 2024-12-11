@@ -115,6 +115,10 @@ if (isset($_SESSION['access_token']))
             $Reliable->getReliable()->checkReVerification();
             $Reliable->checkBeOne();
             $Reliable->addReliable();
+           /*
+            echo '<pre>';
+            var_dump($Reliable->getAll());
+            echo '</pre>';*/
         }
         
         if (isset($_POST['csv']) && !isset($_POST['regenerate_list']))

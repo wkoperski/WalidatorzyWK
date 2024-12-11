@@ -4,6 +4,7 @@ namespace Suppliers\Reliable;
 
 include "vendor/autoload.php";
 
+use DateInterval;
 use DateTime;
 use PDO;
 use GuzzleHttp\Client;
@@ -31,7 +32,7 @@ class getReliableActive
 
     public function getReliableFull(): array
     {
-        $stmt = $this->PDO->prepare("select * from zgloszeni_wiarygodni JOIN weryfikacja_formalna ON zgloszeni_wiarygodni.guid_wf= weryfikacja_formalna.guid WHERE zgloszeni_wiarygodni.accept = 0 and zgloszeni_wiarygodni.rejection =0   ORDER BY weryfikacja_formalna.nazwa ASC");
+        $stmt = $this->PDO->prepare("select * from zgloszeni_wiarygodni JOIN weryfikacja_formalna ON zgloszeni_wiarygodni.guid_wf= weryfikacja_formalna.guid WHERE zgloszeni_wiarygodni.accept = 0 and zgloszeni_wiarygodni.rejection =0   ORDER BY weryfikacja_formalna.nazwa");
         $stmt->execute();
 
 
@@ -55,7 +56,7 @@ class getReliableActive
 
     public function addReliable():void
     {
-        $stmt = $this->PDO->prepare("INSERT INTO zgloszeni_wiarygodni (nip, guid_wf, first_invoice, last_invoice, re_verification) VALUE (?,?,?,?,?) ");
+        $stmt = $this->PDO->prepare("INSERT INTO zgloszeni_wiarygodni (nip, guid_wf, first_invoice, last_invoice, re_verification,checkBeoneCooperation, monthBeoneCooperation) VALUES (?,?,?,?,?,?,?)");
         foreach ($this->reliable as $row) {
             $stmt->execute(
                 array(
@@ -63,7 +64,9 @@ class getReliableActive
                     $row['guid'],
                     (property_exists($row['Beone2'],'firstInvoice')) ? $row['Beone2']->firstInvoice : null,
                     (property_exists($row['Beone2'],'lastInvoice')) ? $row['Beone2']->lastInvoice : null,
-                    $row['Beone']
+                    $row['Beone'],
+                    ($row['checkBeoneCooperation']) ? 1 : 0,
+                    ($row['monthBeoneCooperation']) ?:0
                 )
             );
         }
@@ -142,10 +145,11 @@ class getReliableActive
     }
     private function getMonthCooperation($firstInvoice):int
     {
+        $date1=new DateTime(date("Y-m-d"));
+        $date2 = new DateTime(date("Y-m-d", strtotime(str_replace('.', '/', $firstInvoice) ) ));
 
-        $firstInvoiceDate = DateTime::createFromFormat('m-d-Y', str_replace(".", "-", $firstInvoice));
-        $currentDate = new DateTime();
-       return $currentDate->diff($firstInvoiceDate)->m;
+        $data_uzyskania_weryfikacji = $date2->add(DateInterval::createFromDateString('2 year'));
+        return $data_uzyskania_weryfikacji->diff($date1)->format("%d");
     }
     public function checkBeOne():static
     {

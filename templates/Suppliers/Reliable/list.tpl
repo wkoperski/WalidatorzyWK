@@ -116,7 +116,7 @@
                         <th scope="col">Nazwa</th>
                         <th scope="col">NIP</th>
                         <th scope="col">Ocena wiarygodności</th>
-                        <th scope="col">Współpraca > 2 lata</th>
+                        <th scope="col">Współpraca ponad 2 lata</th>
                         <th scope="col">Data pierwszej faktury</th>
                         <th scope="col">Data ostatniej faktury</th>
                         <th scope="col">Ponowne zgłoszenie</th>
@@ -132,11 +132,14 @@
                             <td><small>{$wiarygodny['nazwa']}<a href="index.php?weryfikacja_formalna?guid=xxx" target="_blank"> <i class="bi bi-arrow-up-right-circle"></i></a> </small></td>
                             <td>{$wiarygodny['nip']}</td>
                             <td><small>{$wiarygodny['ocena_wiarygodnosci']}</small></td>
-                            <td>{if isset($wiarygodny['checkBeoneCooperation']) && $wiarygodny['checkBeoneCooperation'] == true}
+                            <td>{if isset($wiarygodny['checkBeoneCooperation']) && $wiarygodny['checkBeoneCooperation'] == true }
                                     <span class="badge bg-success">TAK</span>
-                                {else}
+                                {elseif $wiarygodny['monthBeoneCooperation'] > 30}
                                     <span class="badge bg-danger">NIE</span>
+                                {elseif $wiarygodny['monthBeoneCooperation'] <= 30}
+                                    <span class="badge bg-warning">Za {$wiarygodny['monthBeoneCooperation']} dni</span>
                                 {/if}
+
                             </td>
                             <td>
                                 {if isset($wiarygodny['first_invoice'])}
