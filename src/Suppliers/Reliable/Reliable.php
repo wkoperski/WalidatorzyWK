@@ -78,7 +78,7 @@ class getReliableActive
 
         foreach($nip as $row)
         {
-            if(strlen(trim($nip)) == 10)
+            if(strlen(trim($row)) == 10)
             {
                 $stmt = $this->PDO->prepare("SELECT * FROM weryfikacja_formalna where guid = (Select zgloszeni_wiarygodni.guid_wf from zgloszeni_wiarygodni where NIP=?)");
                 $stmt->execute(array(trim($row)));
