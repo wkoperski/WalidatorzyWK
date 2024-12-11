@@ -1,7 +1,6 @@
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
-
         <li class="nav-item">
             <a class="nav-link " href="index.php">
                 <i class="bi bi-grid"></i>
@@ -15,12 +14,12 @@
             </a>
             <ul id="components-nav" class="nav-content collapse {if $show_walidatorzy_nav}show{/if}" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="components-alerts.html">
+                    <a href="index.php?walidatorzy_statystyki" {if $show_walidatorzy_statystyki}class="active"{/if}>
                         <i class="bi bi-circle"></i><span>Statystyki</span>
                     </a>
                 </li>
                 <li>
-                    <a href="components-accordion.html">
+                    <a href="index.php?walidatorzy_lista" {if $show_walidatorzy_lista}class="active"{/if}>
                         <i class="bi bi-circle"></i><span>Aktywuj / Dezaktywuj</span>
                     </a>
                 </li>
@@ -84,7 +83,7 @@
             </a>
             <ul id="reliably-nav" class="nav-content collapse {if $show_wiarygodni_nav}show{/if}" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="components-alerts.html">
+                    <a href="index.php?wiarygodni_statystyki" {if $show_wiarygodni_statystyki}class="active"{/if}>
                         <i class="bi bi-circle"></i><span>Statystyki</span>
                     </a>
                 </li>
@@ -187,7 +186,7 @@
         </li><!-- End F.A.Q Page Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-login.html">
+            <a class="nav-link collapsed" href="index.php?logout">
                 <i class="bi bi-box-arrow-in-right"></i>
                 <span>Wyloguj</span>
             </a>
