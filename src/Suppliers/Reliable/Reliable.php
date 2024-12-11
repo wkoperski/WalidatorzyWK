@@ -31,7 +31,7 @@ class getReliableActive
 
     public function getReliableFull(): array
     {
-        $stmt = $this->PDO->prepare("select * from zgloszeni_wiarygodni JOIN weryfikacja_formalna ON zgloszeni_wiarygodni.guid_wf= weryfikacja_formalna.guid WHERE zgloszeni_wiarygodni.accept IS NULL and zgloszeni_wiarygodni.rejection =0   ORDER BY weryfikacja_formalna.nazwa ASC");
+        $stmt = $this->PDO->prepare("select * from zgloszeni_wiarygodni JOIN weryfikacja_formalna ON zgloszeni_wiarygodni.guid_wf= weryfikacja_formalna.guid WHERE zgloszeni_wiarygodni.accept = 0 and zgloszeni_wiarygodni.rejection =0   ORDER BY weryfikacja_formalna.nazwa ASC");
         $stmt->execute();
 
 
@@ -72,7 +72,7 @@ class getReliableActive
 
     public function getAcceptReliable():array
     {
-        $stmt = $this->PDO->prepare("select weryfikacja_formalna.nazwa, weryfikacja_formalna.nip, weryfikacja_formalna.ocena_wiarygodnosci from zgloszeni_wiarygodni JOIN weryfikacja_formalna ON weryfikacja_formalna.guid = zgloszeni_wiarygodni.guid_wf WHERE accept IS NOT NULL");
+        $stmt = $this->PDO->prepare("select weryfikacja_formalna.nazwa, weryfikacja_formalna.nip, weryfikacja_formalna.ocena_wiarygodnosci from zgloszeni_wiarygodni JOIN weryfikacja_formalna ON weryfikacja_formalna.guid = zgloszeni_wiarygodni.guid_wf WHERE accept = 1");
         $stmt->execute();
 
 
@@ -81,7 +81,7 @@ class getReliableActive
 
     public function acceptReliable(string $guid_wf):void
     {
-        $stmt = $this->PDO->prepare("UPDATE zgloszeni_wiarygodni SET accept=true WHERE guid_wf=:guid_wf");
+        $stmt = $this->PDO->prepare("UPDATE zgloszeni_wiarygodni SET accept=1 WHERE guid_wf=:guid_wf");
 
             $stmt->execute(
                 array(
@@ -92,7 +92,7 @@ class getReliableActive
 
     public function rejectionReliable(string $guid_wf):void
     {
-        $stmt = $this->PDO->prepare("UPDATE zgloszeni_wiarygodni SET rejection=true WHERE guid_wf=:guid_wf");
+        $stmt = $this->PDO->prepare("UPDATE zgloszeni_wiarygodni SET rejection=1 WHERE guid_wf=:guid_wf");
 
         $stmt->execute(
             array(
@@ -159,7 +159,7 @@ class getReliableActive
             'verify' => false
 
         ]);
-            $tmp_table = array_slice($this->reliable, 0, 100);
+            $tmp_table = array_slice($this->reliable, 0, 200);
 
         foreach ($tmp_table as $reliable) {
 

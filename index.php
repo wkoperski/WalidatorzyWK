@@ -110,7 +110,14 @@ if (isset($_SESSION['access_token']))
     if(isset($_GET['wiarygodni_lista']))
     {
         $Reliable = new \Suppliers\Reliable\getReliableActive($db);
-        if (isset($_POST['csv']))
+        if(isset($_POST['regenerate_list']))
+        {
+            $Reliable->getReliable()->checkReVerification();
+            $Reliable->checkBeOne();
+            $Reliable->addReliable();
+        }
+        
+        if (isset($_POST['csv']) && !isset($_POST['regenerate_list']))
         {
             function array2csv(array $array)
             {
