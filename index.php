@@ -114,7 +114,7 @@ if (isset($_SESSION['access_token']))
 
             foreach (explode(PHP_EOL,$_POST['nip_lista']) as $row)
             {
-                $Reliable->addNipToReliable($row);
+                $Reliable->addNipToReliable(trim($row));
             }
 
             $smart->assign('komunikat',$_POST['nip_lista']);
