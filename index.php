@@ -7,6 +7,8 @@ require_once(__DIR__.'/Verification/Transaction.php');
 require_once(__DIR__.'/src/Suppliers/Reliable/Reliable.php');
 require_once (__DIR__.'/src/Notifications/Email.php');
 require_once (__DIR__.'/src/Verification/getFormalVerification.php');
+require_once (__DIR__.'/src/Validators/getValidator.php');
+require_once (__DIR__.'/src/Validators/getValidators.php');
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -87,15 +89,38 @@ if (isset($_SESSION['access_token']))
 
    try {
        $db = new PDO("mysql:host=". $env['HOST'] .";dbname=". $env['DB_NAME'] .";port=". $env['DB_PORT'], $env['DB_USER'],$env['DB_PASSWORD']);
-       $stmt = $db->prepare("SELECT * FROM Walidatorzy ORDER BY Nazwa" );
-       $stmt->execute();
-       $smart->assign('walidatorzy', $stmt->fetchAll(PDO::FETCH_ASSOC));
-       $smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
-       $smart->assign('StatisticsTransaction',\Validator\ValidatorStatisticsFormalVerification::getStatisticsTransactionVerification($db));
+
+
    } catch (Exception $e)
    {
         echo $e->getMessage();
    }
+
+   /** WALIDATORZY STATYSTYKI */
+    if(isset($_GET['walidatorzy_statystyki']))
+    {
+        $smart->assign('show_walidatorzy_nav',1);
+        $smart->assign('show_walidatorzy_statystyki',1);
+        $smart->assign('StatisticsFormal',\Validator\ValidatorStatisticsFormalVerification::getStatisticsFormalVerification($db));
+        $smart->assign('StatisticsTransaction',\Validator\ValidatorStatisticsFormalVerification::getStatisticsTransactionVerification($db));
+        $smart->display('Validators\stats.tpl');
+        exit();
+    }
+    /** END WALIDATORZY STATYSTYKI */
+
+    /** WALIDATORZY LISTA */
+    if(isset($_GET['walidatorzy_lista']))
+    {
+        $stmt = $db->prepare("SELECT * FROM Walidatorzy ORDER BY Nazwa" );
+        $stmt->execute();
+        $smart->assign('walidatorzy', $stmt->fetchAll(PDO::FETCH_ASSOC));
+        $smart->assign('show_walidatorzy_nav',1);
+        $smart->assign('show_walidatorzy_lista',1);
+        $smart->display('Validators\state.tpl');
+        exit();
+    }
+    /** END WALIDATORZY LISTA */
+
 
     /** WERYFIKACJA FORMALNA */
     if(isset($_GET['weryfikacja_formalna'])) {
@@ -104,7 +129,21 @@ if (isset($_SESSION['access_token']))
         $smart->display('Verification/formal.tpl');
         exit();
     }
-   
+
+    /** WIARYGODNI STATYSTYKI */
+    if(isset($_GET['wiarygodni_statystyki'])) {
+        $smart->assign('show_wiarygodni_nav',1);
+        $smart->assign('show_wiarygodni_statystyki',1);
+        try {
+            $smart->display('Suppliers/Reliable/stats.tpl');
+        } catch (\Smarty\Exception|Exception $e) {
+            echo $e->getMessage();
+        }
+
+        exit();
+    }
+    /** END WIARYGODNI STATYSTYKI */
+
    /** WIARYGODNI DODAJ */
     if(isset($_GET['wiarygodni_dodaj']))
     {
@@ -232,10 +271,18 @@ if (isset($_SESSION['access_token']))
     /** ZMIANA WALIDATORA **/
     if (isset($_POST['change_verification_formal'])  && isset($_POST['new_validator_verification_formal']))
     {
-        FormalVerification\changeFormalVeryfication::changeValidator($db,$_POST['change_verification_formal'], Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_formal']));
+       FormalVerification\changeFormalVeryfication::changeValidator($db,$_POST['change_verification_formal'], Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_formal']));
         $smart->assign('komunikat', "Dla weryfikacji <strong>".$_POST['change_verification_formal']."</strong> został zmieniony walidator na ".Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_formal'])->getName());
-        //$smart->assign('return',true);
-        $smart->display('Validators/delete.tpl');
+        $new_walidator = Validators\getValidator::getValidatorById($db,$_POST['change_verification_formal']);
+        $email = new Notifications\Email();
+        $email->sendEmail($new_walidator->getEmail(),'Nowa weryfikacja transakcyjna',"Została przydzielona nowa weryfikacja formalna. Zaloguj się na stronie <a href='https://wk.wielton.com.pl'>https://wk.wielton.com.pl</a>'");
+        $smart->assign('return',true);
+
+        try {
+            $smart->display('Validators/delete.tpl');
+        } catch (\Smarty\Exception|Exception $e) {
+            echo $e->getMessage();
+        }
         exit();
     }
 
@@ -243,7 +290,10 @@ if (isset($_SESSION['access_token']))
     {
         TransactionVerification\changeTransactionVeryfication::changeValidator($db,$_POST['change_verification_transaction'], Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_transaction']));
         $smart->assign('komunikat', "Dla weryfikacji <strong>".$_POST['change_verification_transaction']."</strong> został zmieniony walidator na ".Validator\Validator::getValidatorByID($db,$_POST['new_validator_verification_transaction'])->getName());
-       /* $smart->assign('return',true);*/
+        $smart->assign('return',true);
+        $new_walidator = Validators\getValidator::getValidatorById($db,$_POST['new_validator_verification_transaction']);
+        $email = new Notifications\Email();
+        $email->sendEmail($new_walidator->getEmail(),'Nowa weryfikacja transakcyjna',"Została przydzielona nowa weryfikacja transakcyjna. Zaloguj się na stronie <a href='https://wk.wielton.com.pl'>https://wk.wielton.com.pl</a>");
         $smart->display('Validators/delete.tpl');
         exit();
     }
@@ -311,7 +361,7 @@ if (isset($_SESSION['access_token']))
         } catch (Exception $e) {
 
         }
-        $val=\Validator\getValidator::getValidatorAll($db);
+        $val=\Validators\getValidators::byActive($db,$_POST['validator_delete']);
         $opt = array();
         $opt+= array(0 =>'Wybierz walidatora');
         foreach($val as $row)
@@ -414,7 +464,7 @@ if (isset($_POST['access_token'])) {
     exit();
 }
 
-if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+if (isset($_GET['logout'])) {
     unset($_SESSION['msatg']);
     header('Location: https://abc.xyz.com/sso/');
     exit();
