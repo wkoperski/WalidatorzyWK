@@ -11,8 +11,3 @@ Vagrantfile
 .github/workflows
 /test.php
 /tests/
-/NiceAdmin/
-/templates_c/
-.github/workflows
-/test.php
-/tests/
