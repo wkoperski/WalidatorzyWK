@@ -51,7 +51,7 @@
     }
 
     if(powrot){
-            window.location.replace("index.php");
+            window.location.replace("index.php?walidatorzy_lista");
         }
     }
 
