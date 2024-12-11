@@ -73,24 +73,31 @@ class getReliableActive
 
     }
     
-    public function addNipToReliable(string $nip):void
+    public function addNipToReliable(array $nip):void
     {
-        if(strlen($nip) == 10)
+
+        foreach($nip as $row)
         {
-            $stmt = $this->PDO->prepare("SELECT * FROM weryfikacja_formalna where guid = (Select zgloszeni_wiarygodni.guid_wf from zgloszeni_wiarygodni where NIP=?)");
-            $stmt->execute(array($nip));
-            $data =  $stmt->fetch();
-            $stmt = $this->PDO->prepare("INSERT INTO lista_wiarygodnych (nip, guid, nazwa,data_dodania) VALUES (?,?,?,?)");
-            $stmt->execute(
-                array(
-                    $data['nip'],
-                    $data['guid'],
-                    $data['nazwa'],
-                    date('Y-m-d H:i'),
-                )
-            );
-            $this->PDO->prepare("DELETE FROM zgloszeni_wiarygodni where nip=?")->execute(array($data['nip']));
+            if(strlen(trim($nip)) == 10)
+            {
+                $stmt = $this->PDO->prepare("SELECT * FROM weryfikacja_formalna where guid = (Select zgloszeni_wiarygodni.guid_wf from zgloszeni_wiarygodni where NIP=?)");
+                $stmt->execute(array(trim($row)));
+                $data =  $stmt->fetch();
+                $stmt = $this->PDO->prepare("INSERT INTO lista_wiarygodnych (nip, guid, nazwa,data_dodania) VALUES (?,?,?,?)");
+                $stmt->execute(
+                    array(
+                        $data['nip'],
+                        $data['guid'],
+                        $data['nazwa'],
+                        date('Y-m-d H:i'),
+                    )
+                );
+                $this->PDO->prepare("DELETE FROM zgloszeni_wiarygodni where nip=?")->execute(array($data['nip']));
+            }
+
         }
+           
+        
 
 
     }
