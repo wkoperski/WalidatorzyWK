@@ -100,7 +100,7 @@
                                             {assign var=counter value=1}
                                             {foreach from=$walidatorzy item=walidator}
 
-                                                <tr>
+                                                <tr {if $walidator['aktywny'] == 1} class="table-success" {elseif $walidator['aktywny'] ==0} class="table-danger"  {/if}>
                                                     <th scope="row">{$counter++}</th>
                                                     <td>{$walidator['nazwa']}</td>
                                                     <td>{$walidator['email']}</td>
