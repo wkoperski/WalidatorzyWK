@@ -4,7 +4,7 @@ namespace Validators;
 
 use PDO;
 
-class Validator
+class Validator extends \Validator\Validator
 {
     public function __construct(
         private readonly int $id=0,
