@@ -40,12 +40,12 @@
             </a>
             <ul id="veryficationFormal-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="components-alerts.html">
+                    <a href="index.php?formalne_lista">
                         <i class="bi bi-circle"></i><span>Statystyki</span>
                     </a>
                 </li>
                 <li>
-                    <a href="components-accordion.html">
+                    <a href="index.php?formalne_zarzadzaj">
                         <i class="bi bi-circle"></i><span>Zarządzaj</span>
                     </a>
                 </li>
@@ -61,12 +61,12 @@
             </a>
             <ul id="veryficationTransaction-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="components-alerts.html">
+                    <a href="index.php?transakcjne_lista">
                         <i class="bi bi-circle"></i><span>Statystyki</span>
                     </a>
                 </li>
                 <li>
-                    <a href="components-accordion.html">
+                    <a href="index.php?transakcjne_zarzadzaj">
                         <i class="bi bi-circle"></i><span>Zarządzaj</span>
                     </a>
                 </li>
@@ -108,7 +108,7 @@
         <!-- End Wiarygodni -->
 
         <!-- WPR -->
-        <li class="nav-item disabled" >
+       {* <li class="nav-item disabled" >
             <a class="nav-link collapsed" data-bs-target="#wpr-nav" data-bs-toggle="collapse" href="#">
                 <i class="ri ri-account-box-line"></i><span>WPR</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
@@ -126,11 +126,11 @@
                 </li>
 
             </ul>
-        </li>
+        </li>*}
         <!-- End WPR -->
 
         <!-- Użytkownicy -->
-        <li class="nav-item">
+        {*<li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#users-nav" data-bs-toggle="collapse" href="#">
                 <i class="ri ri-account-box-line"></i><span>Użytkownicy</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
@@ -146,11 +146,11 @@
                     </a>
                 </li>
             </ul>
-        </li>
+        </li>*}
         <!-- End użytkownicy -->
 
         <!-- Raporty -->
-        <li class="nav-item">
+        {*<li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#reports-nav" data-bs-toggle="collapse" href="#">
                 <i class="ri ri-account-box-line"></i><span>Raporty</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
@@ -162,7 +162,7 @@
                 </li>
 
             </ul>
-        </li>
+        </li>*}
         <!-- End Raporty -->
 
         <!-- End Components Nav -->
@@ -172,14 +172,14 @@
         <li class="nav-heading">Strony</li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="users-profile.html">
+            <a class="nav-link collapsed" href="index.php?profile">
                 <i class="bi bi-person"></i>
                 <span>Mój profil</span>
             </a>
         </li><!-- End Profile Page Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-faq.html">
+            <a class="nav-link collapsed" href="index.php?faq">
                 <i class="bi bi-question-circle"></i>
                 <span>F.A.Q</span>
             </a>
