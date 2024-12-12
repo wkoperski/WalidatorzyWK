@@ -7,6 +7,7 @@ require_once(__DIR__.'/Verification/Transaction.php');
 require_once(__DIR__.'/src/Suppliers/Reliable/Reliable.php');
 require_once (__DIR__.'/src/Notifications/Email.php');
 require_once (__DIR__.'/src/Verification/getFormalVerification.php');
+require_once (__DIR__.'/src/Validators/Validator.php');
 require_once (__DIR__.'/src/Validators/getValidator.php');
 require_once (__DIR__.'/src/Validators/getValidators.php');
 ini_set('display_errors', 1);
