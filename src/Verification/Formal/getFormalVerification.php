@@ -1,8 +1,9 @@
 <?php
 
-namespace Verification;
+namespace Verification\Formal;
 
 use PDO;
+
 class getFormalVerification
 {
 
