@@ -442,7 +442,7 @@ if (isset($_SESSION['access_token']))
 
 
     try {
-        $smart->display('index.tpl');
+        $smart->display('dashboard.tpl');
     } catch (\Smarty\Exception|Exception $e) {
         echo $e->getMessage();
         exit();
