@@ -39,7 +39,7 @@ if(isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'adminwk.wielton
 }
 
 //Wyłączenie konieczności logowania ze stacji dev
-if (isset($_SERVER['COMPUTERNAME']) && $_SERVER['COMPUTERNAME'] == 'WL850') {
+if (isset($_SERVER['COMPUTERNAME']) && ($_SERVER['COMPUTERNAME'] == 'WL850' || $_SERVER['COMPUTERNAME'] == 'DESKTOP-8ON889J')) {
     $_SESSION['access_token'] = 'local';
 }
 
