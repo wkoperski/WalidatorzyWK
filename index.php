@@ -3,6 +3,8 @@
 use FormalVerification\deleteFormalVeryfication;
 use FormalVerification\VerificationStatus;
 use Smarty\Smarty;
+use Suppliers\Reliable\getReliable;
+
 use Suppliers\Reliable\getReliableActive;
 use Validator\addValidator;
 use Validator\checkValidator;
@@ -19,11 +21,14 @@ require_once(__DIR__.'/Validator.php');
 require_once(__DIR__.'/Verification/Formal.php');
 require_once(__DIR__.'/Verification/Transaction.php');
 require_once(__DIR__.'/src/Suppliers/Reliable/Reliable.php');
+require_once(__DIR__.'/src/Suppliers/Reliable/getReliable.php');
 require_once (__DIR__.'/src/Notifications/Email.php');
 require_once (__DIR__.'/src/Verification/Formal/getFormalVerification.php');
 require_once (__DIR__.'/src/Validators/Validator.php');
 require_once (__DIR__.'/src/Validators/getValidator.php');
 require_once (__DIR__.'/src/Validators/getValidators.php');
+
+
 if(isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'adminwk.wielton.com.pl') {
     ini_set('display_errors', 0);
     ini_set('display_startup_errors', 0);
@@ -34,7 +39,7 @@ if(isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'adminwk.wielton
 }
 
 //Wyłączenie konieczności logowania ze stacji dev
-if (isset($_SERVER['COMPUTERNAME']) && $_SERVER['COMPUTERNAME'] == 'WL850') {
+if (isset($_SERVER['COMPUTERNAME']) && ($_SERVER['COMPUTERNAME'] == 'WL850' || $_SERVER['COMPUTERNAME'] == 'DESKTOP-8ON889J')) {
     $_SESSION['access_token'] = 'local';
 }
 
@@ -174,6 +179,23 @@ if (isset($_SESSION['access_token']))
         exit();
     }
     /** END WIARYGODNI STATYSTYKI */
+
+    //** WIARYGODNI USN */
+    if(isset($_GET['wiarygodni_usun']))
+    {
+        try {
+            $getReliable = new getReliable($db);
+            $smart->assign('wiarygodni_lista',$getReliable->getReliableActive());
+            $smart->assign('show_wiarygodni_nav',1);
+            $smart->assign('show_wiarygodni_usun',1);
+            $smart->display('Suppliers/Reliable/delete.tpl');
+        } catch (\Smarty\Exception|Exception $e) {
+            echo $e->getMessage();
+
+        } finally {
+            exit();
+        }
+    }
 
    /** WIARYGODNI DODAJ */
     if(isset($_GET['wiarygodni_dodaj']))

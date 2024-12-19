@@ -162,14 +162,18 @@ class getReliableActive
     private function checkTimeCooperation($firstInvoice):bool
     {
 
-        $firstInvoiceDate = DateTime::createFromFormat('m-d-Y', str_replace(".", "-", $firstInvoice));
-        $currentDate = new DateTime();
-        $date_test = $firstInvoiceDate->format('Y-m-d');
-        $data2 = new DateTime($date_test);
-        if($currentDate->diff($data2)->y >= 2){
-            return true;
+        $pattern = "/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])/";
+        if(preg_match($pattern, $firstInvoice)){
+            $currentDate = new DateTime();
+            $date_test = $firstInvoice;
+            $data2 = new DateTime($date_test);
+            if($currentDate->diff($data2)->y >= 2){
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            throw new Exception("Invalid invoice data. Correct data YYYY-MM-DD. Variable is: ".$firstInvoice);
         }
     }
     private function getMonthCooperation($firstInvoice):int
