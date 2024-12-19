@@ -136,21 +136,28 @@
                                     <span class="badge bg-success">TAK</span>
                                 {elseif $wiarygodny['monthBeoneCooperation'] > 30}
                                     <span class="badge bg-danger">NIE</span>
-                                {elseif $wiarygodny['monthBeoneCooperation'] <= 30}
+                                {elseif $wiarygodny['monthBeoneCooperation'] <= 30 && isset($wiarygodny['first_invoice'])}
                                     <span class="badge bg-warning">Za {$wiarygodny['monthBeoneCooperation']} dni</span>
                                 {/if}
 
                             </td>
-                            <td>
-                                {if isset($wiarygodny['first_invoice'])}
-                                    {$wiarygodny['first_invoice']}
-                                {/if}
-                            </td>
-                            <td>
-                                {if isset($wiarygodny['last_invoice'])}
-                                    {$wiarygodny['last_invoice']}
-                                {/if}
-                            </td>
+                            {if isset($wiarygodny['first_invoice'])}
+                                <td>
+                                    {if isset($wiarygodny['first_invoice'])}
+                                        {$wiarygodny['first_invoice']}
+                                    {/if}
+                                </td>
+                                <td>
+                                    {if isset($wiarygodny['last_invoice'])}
+                                        {$wiarygodny['last_invoice']}
+                                    {/if}
+                                </td>
+                                {else}
+                                <td colspan="2">
+                                    <strong>Nie znaleziono faktur w BeOne</strong>
+                                </td>
+                            {/if}
+
                             <td>
                                 {if $wiarygodny['re_verification'] == '1'}
                                     <span class="badge bg-success">TAK</span>
