@@ -285,7 +285,9 @@ if (isset($_SESSION['access_token']))
 
         if(isset($_POST['add']))
         {
-            $Reliable->acceptReliable($_POST['add']);
+            $Reliable->acceptReliable($_POST['add'], $_POST['message-text'] ?? 'null');
+
+
 
         }
 
