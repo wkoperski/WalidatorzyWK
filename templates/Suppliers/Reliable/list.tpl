@@ -28,6 +28,9 @@
 
     <!-- Template Main CSS File -->
     <link href="assets/css/style.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     <!-- =======================================================
     * Template Name: NiceAdmin
@@ -42,6 +45,16 @@
 <script>
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus')
+    })
+
+    function disabledRequired()
+    {
+        const inputs = document.querySelectorAll("[required]")
+        inputs.forEach((element) => element.required = false);
+    }
 </script>
 <!-- ======= Header ======= -->
 {include file="header.tpl"}
@@ -87,6 +100,7 @@
             </div>
 
         </div>
+    </div>
     <div class="col-lg-12">
         <div class="card">
             {if isset($komunikat)}
@@ -103,12 +117,16 @@
                 </div>
             {/if}
         </div>
+    </div>
+
+    <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Zgłoszeni do wiarygodnych</h5>
+                <h5 class="card-title">Zgłoszeni do wiarygodnych 123</h5>
 
                 <!-- Horizontal Form -->
                 <form action="index.php?wiarygodni_lista" method="post">
+
                 <table class="table table-sm">
                     <thead>
                     <tr class="small">
@@ -126,6 +144,35 @@
                     <tbody>
                     {assign var=counter value=1}
                     {foreach from=$wiarygodni_lista item=wiarygodny}
+                        {if $wiarygodny['checkBeoneCooperation'] == false }
+                    <div class="modal fade" id="exampleModal_{{$wiarygodny['guid']}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" >
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+
+                                    <h5 class="modal-title" id="exampleModalLabel">Powód dodania na listę wiarygodnych</h5>
+                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+
+                                    </button>
+                                </div>
+                                <form action="index.php?wiarygodni_lista" method="post">
+                                    <div class="modal-body">
+
+                                        <div class="form-group">
+                                            <label for="message-text_{$wiarygodny['guid']}" class="col-form-label">Wiadomość</label>
+                                            <textarea class="form-control" id="message-text_{$wiarygodny['guid']}" name="message-text" placeholder="Proszę określić, dlaczego jest dodawany na listę mimo nie spełnienia kryteriów" required></textarea>
+                                        </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                                <button type="submit" class="btn btn-primary" name="add" value="{$wiarygodny['guid']}">Zapisz i dodaj</button>
+                            </div>
+
+                        </div>
+                    </div>
+            </div>
+                        {/if}
 
                         <tr {if isset($wiarygodny['checkBeoneCooperation']) &&  $wiarygodny['checkBeoneCooperation'] == false} class="table-danger" {/if}>
                             <th scope="row">{$counter++}</th>
@@ -167,7 +214,13 @@
                             </td>
                             <td>
                                 <button class="bi bi-trash" type="submit" style="border:none !important;background-color: transparent !important;" name="delete" value="{$wiarygodny['guid']}"></button>
-                                <button type="submit" style="border: none !important;background-color: transparent !important;" name="add" value="{$wiarygodny['guid']}"><i class="bi bi-plus-circle-fill"></i></button>
+
+                                {if isset($wiarygodny['checkBeoneCooperation']) && $wiarygodny['checkBeoneCooperation'] == true }
+                                    <button type="submit" style="border: none !important;background-color: transparent !important;" name="add" value="{$wiarygodny['guid']}" onclick="disabledRequired()"><i class="bi bi-plus-circle-fill"></i></button>
+                                {else}
+                                    <button type="button" style="border: none;background-color: transparent" data-toggle="modal" data-target="#exampleModal_{{$wiarygodny['guid']}}" data-whatever="@mdo"><i class="bi bi-plus-circle-fill"></i></button>
+                                {/if}
+
                             </td>
                         </tr>
 
