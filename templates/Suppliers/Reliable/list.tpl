@@ -50,11 +50,6 @@
         $('#myInput').trigger('focus')
     })
 
-    function disabledRequired()
-    {
-        const inputs = document.querySelectorAll("[required]")
-        inputs.forEach((element) => element.required = false);
-    }
 </script>
 <!-- ======= Header ======= -->
 {include file="header.tpl"}
@@ -122,7 +117,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Zgłoszeni do wiarygodnych 123</h5>
+                <h5 class="card-title">Zgłoszeni do wiarygodnych</h5>
 
                 <!-- Horizontal Form -->
                 <form action="index.php?wiarygodni_lista" method="post">
@@ -144,36 +139,6 @@
                     <tbody>
                     {assign var=counter value=1}
                     {foreach from=$wiarygodni_lista item=wiarygodny}
-                        {if $wiarygodny['checkBeoneCooperation'] == false }
-                    <div class="modal fade" id="exampleModal_{{$wiarygodny['guid']}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" >
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-
-                                    <h5 class="modal-title" id="exampleModalLabel">Powód dodania na listę wiarygodnych</h5>
-                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-
-                                    </button>
-                                </div>
-                                <form action="index.php?wiarygodni_lista" method="post">
-                                    <div class="modal-body">
-
-                                        <div class="form-group">
-                                            <label for="message-text_{$wiarygodny['guid']}" class="col-form-label">Wiadomość</label>
-                                            <textarea class="form-control" id="message-text_{$wiarygodny['guid']}" name="message-text" placeholder="Proszę określić, dlaczego jest dodawany na listę mimo nie spełnienia kryteriów" required></textarea>
-                                        </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
-                                <button type="submit" class="btn btn-primary" name="add" value="{$wiarygodny['guid']}">Zapisz i dodaj</button>
-                            </div>
-
-                        </div>
-                    </div>
-            </div>
-                        {/if}
-
                         <tr {if isset($wiarygodny['checkBeoneCooperation']) &&  $wiarygodny['checkBeoneCooperation'] == false} class="table-danger" {/if}>
                             <th scope="row">{$counter++}</th>
                             <td><small>{$wiarygodny['nazwa']|truncate:30}<a href="index.php?weryfikacja_formalna&guid={$wiarygodny['guid_wf']}" target="_blank"> <i class="bi bi-arrow-up-right-circle"></i></a> </small></td>
@@ -213,12 +178,12 @@
                                 {/if}
                             </td>
                             <td>
-                                <button class="bi bi-trash" type="submit" style="border:none !important;background-color: transparent !important;" name="delete" value="{$wiarygodny['guid']}"></button>
 
+                                <button type="button" class="bi bi-trash" style="border: none;background-color: transparent" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" name="delete" value="{$wiarygodny['guid']}" onclick="changeValueModal(this)"></button>
                                 {if isset($wiarygodny['checkBeoneCooperation']) && $wiarygodny['checkBeoneCooperation'] == true }
-                                    <button type="submit" style="border: none !important;background-color: transparent !important;" name="add" value="{$wiarygodny['guid']}" onclick="disabledRequired()"><i class="bi bi-plus-circle-fill"></i></button>
+                                    <button type="submit" style="border: none !important;background-color: transparent !important;" name="add_correct" value="{$wiarygodny['guid']}" onclick="changeValueModal(this)"><i class="bi bi-plus-circle-fill"></i></button>
                                 {else}
-                                    <button type="button" style="border: none;background-color: transparent" data-toggle="modal" data-target="#exampleModal_{{$wiarygodny['guid']}}" data-whatever="@mdo"><i class="bi bi-plus-circle-fill"></i></button>
+                                    <button type="button" style="border: none;background-color: transparent" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" onclick="changeValueModal(this)" name="add" value="{$wiarygodny['guid']}"><i class="bi bi-plus-circle-fill"></i></button>
                                 {/if}
 
                             </td>
@@ -229,6 +194,36 @@
 
                     </tbody>
                 </table>
+
+                    <!-- MODAL WINDOW -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" >
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+
+                                    <h5 class="modal-title" id="exampleModalLabel">Powód dodania na listę wiarygodnych</h5>
+                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+
+                                    </button>
+                                </div>
+                                <form action="{*index.php?wiarygodni_lista*}" method="post">
+                                    <input type="hidden" id="action">
+                                    <input type="hidden" id="guid" name="guid" value="">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label">Wiadomość</label>
+                                            <textarea class="form-control" id="message-text" name="message-text" placeholder="" required></textarea>
+                                        </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                                <button type="submit" class="btn btn-primary" >Zapisz i dodaj</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END MODAL WINDOW -->
+
                 <!-- End Horizontal Form -->
                 </form>
             </div>
@@ -256,7 +251,7 @@
 
 <!-- Template Main JS File -->
 <script src="assets/js/main.js"></script>
-
+<script src="assets/js/changeValueModal.js"></script>
 </body>
 
 </html>
