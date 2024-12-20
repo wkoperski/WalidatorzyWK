@@ -80,16 +80,17 @@ class getReliableActive
         {
             if(strlen(trim($row)) == 10)
             {
-                $stmt = $this->PDO->prepare("SELECT * FROM weryfikacja_formalna where guid = (Select zgloszeni_wiarygodni.guid_wf from zgloszeni_wiarygodni where NIP=?)");
+                $stmt = $this->PDO->prepare("SELECT weryfikacja_formalna.guid,weryfikacja_formalna.nip,nazwa, zgloszeni_wiarygodni.comment FROM weryfikacja_formalna JOIN zgloszeni_wiarygodni ON zgloszeni_wiarygodni.guid_wf = weryfikacja_formalna.guid where guid = (Select zgloszeni_wiarygodni.guid_wf from zgloszeni_wiarygodni where NIP=?)");
                 $stmt->execute(array(trim($row)));
                 $data =  $stmt->fetch();
-                $stmt = $this->PDO->prepare("INSERT INTO lista_wiarygodnych (nip, guid, nazwa,data_dodania) VALUES (?,?,?,?)");
+                $stmt = $this->PDO->prepare("INSERT INTO lista_wiarygodnych (nip, guid, nazwa,data_dodania,comment) VALUES (?,?,?,?,?)");
                 $stmt->execute(
                     array(
                         $data['nip'],
                         $data['guid'],
                         $data['nazwa'],
                         date('Y-m-d H:i'),
+                        $data['comment'],
                     )
                 );
                 $this->PDO->prepare("DELETE FROM zgloszeni_wiarygodni where nip=?")->execute(array($data['nip']));
@@ -104,20 +105,21 @@ class getReliableActive
 
     public function getAcceptReliable():array
     {
-        $stmt = $this->PDO->prepare("select weryfikacja_formalna.nazwa, weryfikacja_formalna.nip, weryfikacja_formalna.ocena_wiarygodnosci from zgloszeni_wiarygodni JOIN weryfikacja_formalna ON weryfikacja_formalna.guid = zgloszeni_wiarygodni.guid_wf WHERE accept = 1");
+        $stmt = $this->PDO->prepare("select weryfikacja_formalna.nazwa, weryfikacja_formalna.nip, weryfikacja_formalna.ocena_wiarygodnosci, zgloszeni_wiarygodni.comment from zgloszeni_wiarygodni JOIN weryfikacja_formalna ON weryfikacja_formalna.guid = zgloszeni_wiarygodni.guid_wf WHERE accept = 1");
         $stmt->execute();
 
 
         return  $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function acceptReliable(string $guid_wf):void
+    public function acceptReliable(string $guid_wf, string $comment =''):void
     {
-        $stmt = $this->PDO->prepare("UPDATE zgloszeni_wiarygodni SET accept=1 WHERE guid_wf=:guid_wf");
+        $stmt = $this->PDO->prepare("UPDATE zgloszeni_wiarygodni SET accept=1, comment =:comment WHERE guid_wf=:guid_wf");
 
             $stmt->execute(
                 array(
                     'guid_wf'   => $guid_wf,
+                    'comment'   => $comment
                 )
             );
     }
