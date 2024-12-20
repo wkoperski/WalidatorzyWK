@@ -150,7 +150,7 @@
                                     <th scope="col">Nazwa</th>
                                     <th scope="col">NIP</th>
                                     <th scope="col">Ocena wiarygodności</th>
-
+                                    <th scope="col">Komentarz</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -162,7 +162,7 @@
                                     <td><small>{$wiarygodny['nazwa']}<a href="index.php?weryfikacja_formalna?guid=xxx" target="_blank"> <i class="bi bi-arrow-up-right-circle"></i></a> </small></td>
                                     <td>{$wiarygodny['nip']}</td>
                                     <td><small>{$wiarygodny['ocena_wiarygodnosci']}</small></td>
-
+                                    <td><small>{$wiarygodny['comment']}</small></td>
 
                                     {/foreach}
 
